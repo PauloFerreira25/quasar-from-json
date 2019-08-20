@@ -1,0 +1,28 @@
+import Vue from 'vue'
+
+import QuasarFromJsonMixin from './quasar-from-json-mixin'
+
+export default Vue.extend({
+  name: 'QuasarFromJson',
+
+  mixins: [ QuasarFromJsonMixin ],
+
+  props: {
+    item: {
+      required: true,
+      validator: item => !!item
+    }
+  },
+
+  render (renderFunction) {
+    let childrens = this.item.childrens
+      ? this.item.childrens.map(children => renderFunction('QuasarFromJson', { props: { item: children } }))
+      : []
+
+    return renderFunction(this.item.type, {
+      key: this.key,
+      ref: this.ref,
+      props: this.properties
+    }, childrens)
+  }
+})
