@@ -17,6 +17,7 @@ export default {
           key: this.key,
           ref: this.ref,
           props: this.properties,
+          atts: this.attrs,
           class: this.class
         },
         vueInstance: this

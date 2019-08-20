@@ -15,6 +15,14 @@ export default {
       return this.item.properties || {}
     },
 
+    props () {
+      return this.properties.props || {}
+    },
+
+    attrs () {
+      return this.properties.attrs || {}
+    },
+
     class () {
       return this.properties.class
     },
