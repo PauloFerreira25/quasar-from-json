@@ -9,14 +9,14 @@ export default class I18N extends Base {
   mount (config) {
     let data = this.decorator.mount(config)
 
-    let text = this.__getText(config.vueInstance, config.item.i18n.t.getText)
-    this.__setText(config.item.i18n.t.setText.split('.'), config.baseData, text)
+    let text = this.__getText(config.vueInstance)
+    this.__setText(config.vueInstance.item.i18n.t.setText.split('.'), config.baseData, text)
 
     return data
   }
 
-  __getText (vueInstance, path) {
-    return vueInstance.$t(path)
+  __getText (vueInstance) {
+    return vueInstance.$t(vueInstance.item.i18n.t.getText)
   }
 
   __setText (path, document, text) {
@@ -28,7 +28,7 @@ export default class I18N extends Base {
 
     if (path.length === 0) {
       document[key] = text
-      return
+      return null
     }
 
     return this.__setText(path, document[key], text)

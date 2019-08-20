@@ -5,7 +5,7 @@ export default {
   name: 'DecoratorMixin',
 
   methods: {
-    dataFactory (data) {
+    attributesFactory () {
       let decorators = []
       if (this.item.i18n) {
         decorators.push(I18NDecorator)
@@ -19,7 +19,6 @@ export default {
           props: this.properties,
           class: this.class
         },
-        item: this.item,
         vueInstance: this
       })
     }

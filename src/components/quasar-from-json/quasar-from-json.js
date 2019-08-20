@@ -20,6 +20,6 @@ export default Vue.extend({
       ? this.item.childrens.map(children => renderFunction('QuasarFromJson', { props: { item: children } }))
       : []
 
-    return renderFunction(this.item.type, this.dataFactory(), childrens)
+    return renderFunction(this.item.type, this.attributesFactory(), childrens)
   }
 })
