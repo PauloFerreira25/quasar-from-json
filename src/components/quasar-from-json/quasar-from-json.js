@@ -1,11 +1,12 @@
 import Vue from 'vue'
 
 import QuasarFromJsonMixin from './quasar-from-json-mixin'
+import DecoratorMixin from './qfj-decorator-mixin'
 
 export default Vue.extend({
   name: 'QuasarFromJson',
 
-  mixins: [ QuasarFromJsonMixin ],
+  mixins: [ QuasarFromJsonMixin, DecoratorMixin ],
 
   props: {
     item: {
@@ -19,10 +20,6 @@ export default Vue.extend({
       ? this.item.childrens.map(children => renderFunction('QuasarFromJson', { props: { item: children } }))
       : []
 
-    return renderFunction(this.item.type, {
-      key: this.key,
-      ref: this.ref,
-      props: this.properties
-    }, childrens)
+    return renderFunction(this.item.type, this.dataFactory(), childrens)
   }
 })

@@ -15,6 +15,10 @@ export default {
       return this.item.properties || {}
     },
 
+    class () {
+      return this.properties.class
+    },
+
     validate () {
       return Array.isArray(this.item.validate)
         ? this.item.validate
