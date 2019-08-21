@@ -13,6 +13,10 @@ export default class Getter {
     }
 
     let found = config.vueInstance.item.get.find(getter => getter.ref === definition.getter)
+    if (!found) {
+      throw new Error(`No getter for ${definition.getter}`)
+    }
+
     let Getter = this.getterFactory.create(found.type)
     let text = new Getter().get(found, config.vueInstance)
 
