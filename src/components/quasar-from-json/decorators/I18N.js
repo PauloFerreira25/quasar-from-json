@@ -7,12 +7,12 @@ export default class I18N extends Base {
   }
 
   mount (config) {
-    let data = this.decorator.mount(config)
+    config = this.decorator.mount(config)
 
     let text = this.__getText(config.vueInstance)
     this.__setText(config.vueInstance.item.i18n.t.setText.split('.'), config.baseData, text)
 
-    return data
+    return config
   }
 
   __getText (vueInstance) {
