@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       elements: [{
-        description: 'Uma div com texto',
+        description: 'Div com texto',
         data: {
           type: 'div',
           key: 'test-key',
@@ -44,7 +44,7 @@ export default {
           }]
         }
       }, {
-        description: 'Uma div com texto do i18n',
+        description: 'Div com texto do i18n',
         data: {
           type: 'div',
           key: 'test-key',
@@ -56,6 +56,29 @@ export default {
           }],
           set: [{
             path: 'domProps.innerHTML',
+            type: 'getter',
+            getter: 'teste_raw_text'
+          }]
+        }
+      }, {
+        description: 'Quasar input',
+        data: {
+          type: 'q-input',
+          key: 'test-key',
+          ref: 'test-ref',
+          properties: {
+            props: {
+              outlined: true,
+              dense: true
+            }
+          },
+          get: [{
+            type: 'i18n',
+            path: 'app.name',
+            ref: 'teste_raw_text'
+          }],
+          set: [{
+            path: 'props.label',
             type: 'getter',
             getter: 'teste_raw_text'
           }]
