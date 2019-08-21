@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
 
-    <template v-for="(element, index) in elements" class="row q-gutter-md">
-      <q-card class="col" :key="index">
+    <div v-for="(element, index) in elements" class="row q-gutter-sm" :key="index">
+      <q-card>
         <q-card-section>
           <div class="text-h6 text-primary">{{ element.description }}</div>
         </q-card-section>
@@ -11,7 +11,7 @@
           <quasar-from-json :item="element.data" />
         </q-card-section>
       </q-card>
-    </template>
+    </div>
 
   </q-page>
 </template>
@@ -35,6 +35,23 @@ export default {
           get: [{
             type: 'raw',
             path: 'Texto',
+            ref: 'teste_raw_text'
+          }],
+          set: [{
+            path: 'domProps.innerHTML',
+            type: 'getter',
+            getter: 'teste_raw_text'
+          }]
+        }
+      }, {
+        description: 'Uma div com texto do i18n',
+        data: {
+          type: 'div',
+          key: 'test-key',
+          ref: 'test-ref',
+          get: [{
+            type: 'i18n',
+            path: 'app.name',
             ref: 'teste_raw_text'
           }],
           set: [{
