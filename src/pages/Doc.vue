@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
 
-    <div v-for="(element, index) in elements" class="row q-gutter-sm" :key="index">
-      <q-card>
+    <div class="q-pa-md row items-start q-gutter-md">
+      <q-card v-for="(element, index) in elements" :key="index">
         <q-card-section>
           <div class="text-h6 text-primary">{{ element.description }}</div>
         </q-card-section>
