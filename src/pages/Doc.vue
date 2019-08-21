@@ -24,6 +24,11 @@ export default {
   components: {
     QuasarFromJson
   },
+  computed: {
+    a () {
+      return this.$store.state.doc
+    }
+  },
   data () {
     return {
       elements: [{
@@ -76,6 +81,10 @@ export default {
             type: 'i18n',
             path: 'app.name',
             ref: 'i18n'
+          }, {
+            type: 'store',
+            path: 'doc.qInput',
+            ref: 'store_getter_qinput'
           }],
           set: [{
             path: 'props.label',
@@ -83,8 +92,12 @@ export default {
             getter: 'i18n'
           }, {
             path: 'props.value',
-            type: 'raw',
-            text: 'i18n'
+            type: 'getter',
+            getter: 'store_getter_qinput'
+          }, {
+            path: 'on.input',
+            type: 'store',
+            state: 'doc.qInput'
           }]
         }
       }, {
@@ -103,6 +116,10 @@ export default {
             type: 'i18n',
             path: 'app.name',
             ref: 'i18n'
+          }, {
+            type: 'store',
+            path: 'doc.qInput',
+            ref: 'store_getter_qinput'
           }],
           set: [{
             path: 'props.label',
@@ -112,6 +129,14 @@ export default {
             path: 'props.hint',
             type: 'getter',
             getter: 'i18n'
+          }, {
+            path: 'props.value',
+            type: 'getter',
+            getter: 'store_getter_qinput'
+          }, {
+            path: 'on.input',
+            type: 'store',
+            state: 'doc.qInput'
           }]
         }
       }]

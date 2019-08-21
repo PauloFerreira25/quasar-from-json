@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   findAndSet (path, document, text) {
     let key = path.shift()
 
@@ -12,5 +12,14 @@ module.exports = {
     }
 
     return this.findAndSet(path, document[key], text)
+  },
+  find (path, document) {
+    let key = path.shift()
+
+    if (path.length === 0) {
+      return document[key]
+    }
+
+    return this.find(path, document[key])
   }
 }
