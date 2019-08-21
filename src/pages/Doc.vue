@@ -33,8 +33,8 @@ export default {
           key: 'test-key',
           ref: 'test-ref',
           get: [{
-            type: 'i18n',
-            path: 'app.name',
+            type: 'raw',
+            path: 'Texto',
             ref: 'teste_raw_text'
           }],
           set: [{
