@@ -1,4 +1,5 @@
 import GetterFactory from '../getters/GetterFactory'
+import pathUtils from '../utils/path'
 
 export default class Getter {
   constructor () {
@@ -15,21 +16,6 @@ export default class Getter {
     let Getter = this.getterFactory.create(found.type)
     let text = new Getter().get(found, config.vueInstance)
 
-    this.__setText(definition.path.split('.'), config.baseData, text)
-  }
-
-  __setText (path, document, text) {
-    let key = path.shift()
-
-    if (!document[key]) {
-      document[key] = {}
-    }
-
-    if (path.length === 0) {
-      document[key] = text
-      return null
-    }
-
-    return this.__setText(path, document[key], text)
+    pathUtils.findAndSet(definition.path.split('.'), config.baseData, text)
   }
 }

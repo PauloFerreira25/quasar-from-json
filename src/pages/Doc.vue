@@ -81,6 +81,10 @@ export default {
             path: 'props.label',
             type: 'getter',
             getter: 'i18n'
+          }, {
+            path: 'props.value',
+            type: 'raw',
+            text: 'i18n'
           }]
         }
       }, {
