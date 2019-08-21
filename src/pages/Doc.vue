@@ -52,12 +52,12 @@ export default {
           get: [{
             type: 'i18n',
             path: 'app.name',
-            ref: 'teste_raw_text'
+            ref: 'teste_i18n'
           }],
           set: [{
             path: 'domProps.innerHTML',
             type: 'getter',
-            getter: 'teste_raw_text'
+            getter: 'teste_i18n'
           }]
         }
       }, {
@@ -75,12 +75,39 @@ export default {
           get: [{
             type: 'i18n',
             path: 'app.name',
-            ref: 'teste_raw_text'
+            ref: 'i18n'
           }],
           set: [{
             path: 'props.label',
             type: 'getter',
-            getter: 'teste_raw_text'
+            getter: 'i18n'
+          }]
+        }
+      }, {
+        description: '1 getter 2 setters',
+        data: {
+          type: 'q-input',
+          key: 'test-key',
+          ref: 'test-ref',
+          properties: {
+            props: {
+              outlined: true,
+              dense: true
+            }
+          },
+          get: [{
+            type: 'i18n',
+            path: 'app.name',
+            ref: 'i18n'
+          }],
+          set: [{
+            path: 'props.label',
+            type: 'getter',
+            getter: 'i18n'
+          }, {
+            path: 'props.hint',
+            type: 'getter',
+            getter: 'i18n'
           }]
         }
       }]
