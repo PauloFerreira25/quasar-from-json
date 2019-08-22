@@ -21,105 +21,98 @@ let arrayData = []
 arrayData.push({
   _description: 'Complex',
   data: {
-  //   type: 'div',
-  //   key: 'test-key',
-  //   ref: 'test-ref',
-  //   childrens: [{
-  //     type: 'q-label',
-  //     key: 'test-key',
-  //     ref: 'test-ref',
-  //     renderRules: [{
-  //       type: 'store',
-  //       config: {
-  //         path: 'user.tipo',
-  //         rules: ['notnull']
-  //       }
-  //     }],
-  //     rebind: [{
-  //       set: 'props.label',
-  //       get: {
-  //         from: 'i18n',
-  //         config: {
-  //           path: 'user.tipo'
-  //         }
-  //       }
-  //     }, {
-  //       set: 'on.input',
-  //       get: {
-  //         from: 'store',
-  //         config: {
-  //           type: 'commit',
-  //           path: 'user.tipo'
-  //         }
-  //       }
-  //     }]
-  //   }, {
-  //     type: 'q-input',
-  //     key: 'test-key',
-  //     ref: 'test-ref',
-  //     properties: {
-  //       props: {
-  //         type: 'number'
-  //       }
-  //     },
-  //     rebind: [{
-  //       set: 'props.label',
-  //       get: {
-  //         from: 'i18n',
-  //         config: {
-  //           path: 'input'
-  //         }
-  //       }
-  //     }, {
-  //       set: 'on.input',
-  //       get: {
-  //         from: 'store',
-  //         config: {
-  //           type: 'commit',
-  //           path: 'user.valorEntrada'
-  //         }
-  //       }
-  //     }, {
-  //       set: 'props.rules',
-  //       get: {
-  //         from: 'rules',
-  //         config: {
-  //           rules: ['required'],
-  //           message: {
-  //             type: 'i18n',
-  //             config: {
-  //               path: 'input.error'
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }]
-  //   }, {
-  //     type: 'q-btn',
-  //     key: 'test-key',
-  //     ref: 'test-ref',
-  //     rebind: [{
-  //       set: 'props.label',
-  //       get: {
-  //         from: 'i18n',
-  //         config: {
-  //           path: 'btn.label'
-  //         }
-  //       }
-  //     }, {
-  //       set: 'on.click',
-  //       get: {
-  //         from: 'store',
-  //         config: {
-  //           type: 'dispatch',
-  //           action: 'callBackend',
-  //           onResponse: [{
-  //             // ?
-  //           }]
-  //         }
-  //       }
-  //     }]
-  //   }]
+    type: 'div',
+    key: 'test-key',
+    ref: 'test-ref',
+    childrens: [{
+      type: 'q-label',
+      key: 'test-key',
+      ref: 'test-ref',
+      renderRules: [{
+        store: {
+          path: 'user.tipo',
+          rules: ['notnull']
+        }
+      }],
+      rebind: [{
+        set: 'props.label',
+        get: {
+          i18n: {
+            path: 'user.tipo'
+          }
+        }
+      }, {
+        set: 'on.input',
+        get: {
+          store: {
+            type: 'commit',
+            path: 'user.tipo'
+          }
+        }
+      }]
+    }, {
+      type: 'q-input',
+      key: 'test-key',
+      ref: 'test-ref',
+      properties: {
+        props: {
+          type: 'number'
+        }
+      },
+      rebind: [{
+        set: 'props.label',
+        get: {
+          i18n: {
+            path: 'input'
+          }
+        }
+      }, {
+        set: 'props.rules',
+        get: {
+          rules: {
+            rules: ['required'],
+            message: {
+              type: 'i18n',
+              config: {
+                path: 'input.error'
+              }
+            }
+          }
+        }
+      }],
+      events: {
+        input: {
+          store: {
+            type: 'commit',
+            path: 'user/changeState',
+            actionParams: {
+              state: 'valorEntrada',
+              value: '$action'
+            }
+          }
+        }
+      }
+    }, {
+      type: 'q-btn',
+      key: 'test-key',
+      ref: 'test-ref',
+      rebind: [{
+        set: 'props.label',
+        get: {
+          i18n: {
+            path: 'btn.label'
+          }
+        }
+      }]
+    }],
+    events: {
+      click: {
+        store: {
+          type: 'dispatch',
+          path: 'user/callBackend'
+        }
+      }
+    }
   }
 })
 

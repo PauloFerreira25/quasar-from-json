@@ -14,7 +14,10 @@ export default class Binder extends Base {
     config.vueInstance.item.rebind.map(bind => {
       let getter = this.setterFactory
         .create('get')
-      Object.keys(bind.get).map(key => getter.set(key, bind.get[key], bind.set, config))
+      Object.keys(bind.get)
+        .map(key => getter
+          .set(key, bind.get[key], bind.set, config)
+        )
     })
 
     return config
