@@ -29,8 +29,7 @@ arrayData.push({
     rebind: [{
       set: 'props.label',
       get: {
-        from: 'i18n',
-        config: {
+        i18n: {
           path: 'input.test'
         }
       }
@@ -53,26 +52,22 @@ arrayData.push({
     rebind: [{
       set: 'props.label',
       get: {
-        from: 'i18n',
-        config: {
+        i18n: {
           path: 'input.store'
         }
       }
     }, {
       set: 'props.value',
       get: {
-        from: 'store',
-        config: {
+        store: {
           type: 'state',
           path: 'doc.qInput'
         }
       }
     }],
-    events: [{
-      from: 'input',
-      action: {
-        from: 'store',
-        config: {
+    events: {
+      input: {
+        store: {
           type: 'commit',
           path: 'doc/changeState',
           actionParams: {
@@ -81,7 +76,7 @@ arrayData.push({
           }
         }
       }
-    }]
+    }
   }
 })
 

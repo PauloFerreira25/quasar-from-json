@@ -21,8 +21,7 @@ arrayData.push({
     rebind: [{
       set: 'domProps.innerHTML',
       get: {
-        from: 'i18n',
-        config: {
+        i18n: {
           type: 't',
           path: 'app.name'
         }
@@ -39,8 +38,7 @@ arrayData.push({
     rebind: [{
       set: 'domProps.innerHTML',
       get: {
-        from: 'store',
-        config: {
+        store: {
           type: 'state',
           path: 'doc.text'
         }

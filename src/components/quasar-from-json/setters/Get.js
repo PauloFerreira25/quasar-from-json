@@ -6,10 +6,9 @@ export default class Get {
     this.getterFactory = new GetterFactory()
   }
 
-  set (definition, config) {
-    let text = this.getterFactory.create(definition.get.from)
-      .get(definition.get.config, config.vueInstance)
-
-    pathUtils.findAndSet(definition.set.split('.'), config.baseData, text)
+  set (from, definition, path, config) {
+    let text = this.getterFactory.create(from)
+      .get(definition, config.vueInstance)
+    pathUtils.findAndSet(path.split('.'), config.baseData, text)
   }
 }

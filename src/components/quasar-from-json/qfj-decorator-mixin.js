@@ -14,7 +14,7 @@ export default {
         decorators.push(Decorators.Binder)
       }
 
-      if (Array.isArray(this.item.events) && this.item.events.length > 0) {
+      if (this.item.events) {
         decorators.push(Decorators.Event)
       }
 

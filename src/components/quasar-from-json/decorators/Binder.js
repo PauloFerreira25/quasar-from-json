@@ -11,10 +11,11 @@ export default class Binder extends Base {
   mount (config) {
     config = this.decorator.mount(config)
 
-    config.vueInstance.item.rebind.map(bind => this.setterFactory
-      .create('get')
-      .set(bind, config)
-    )
+    config.vueInstance.item.rebind.map(bind => {
+      let getter = this.setterFactory
+        .create('get')
+      Object.keys(bind.get).map(key => getter.set(key, bind.get[key], bind.set, config))
+    })
 
     return config
   }
