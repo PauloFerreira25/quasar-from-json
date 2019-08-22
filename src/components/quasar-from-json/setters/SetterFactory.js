@@ -1,8 +1,15 @@
 import textUtils from '../utils/text'
 
+let instances = []
+
 export default class SetterFactory {
   create (setterName) {
     let name = textUtils.capitalizeFirstLetter(setterName)
+
+    let instance = instances.find(instance => instance.constructor.name === name)
+    if (instance) {
+      return instance
+    }
 
     let Clss = null
     try {
@@ -12,7 +19,8 @@ export default class SetterFactory {
       throw new Error(`No setter for name ${name}`)
     }
 
-    let instance = new Clss()
+    instance = new Clss()
+    instances.push(instance)
     return instance
   }
 }

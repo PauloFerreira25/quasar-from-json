@@ -58,12 +58,27 @@ arrayData.push({
         }
       }
     }, {
-      set: 'on.input',
+      set: 'props.value',
       get: {
         from: 'store',
         config: {
-          type: 'commit',
+          type: 'state',
           path: 'doc.qInput'
+        }
+      }
+    }],
+    events: [{
+      from: 'input',
+      action: {
+        from: 'store',
+        config: {
+          type: 'commit',
+          to: 'changeState',
+          module: 'doc',
+          params: {
+            state: 'qInput',
+            value: '$action'
+          }
         }
       }
     }]

@@ -14,6 +14,10 @@ export default {
         decorators.push(Decorators.Binder)
       }
 
+      if (Array.isArray(this.item.events) && this.item.events.length > 0) {
+        decorators.push(Decorators.Event)
+      }
+
       let decorator = decorators.reduce((DecoratorAnterior, Atual) => new Atual(DecoratorAnterior), new Decorators.Base())
       return decorator.mount({
         baseData: {

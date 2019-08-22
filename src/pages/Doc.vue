@@ -25,11 +25,6 @@ export default {
   components: {
     QuasarFromJson
   },
-  computed: {
-    a () {
-      return this.$store
-    }
-  },
   data () {
     return {
       elements: docs

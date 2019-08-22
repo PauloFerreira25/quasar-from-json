@@ -1,8 +1,15 @@
 import textUtils from '../utils/text'
 
+let instances = []
+
 export default class GetterFactory {
   create (getterName) {
     let name = textUtils.capitalizeFirstLetter(getterName)
+
+    let instance = instances.find(instance => instance.constructor.name === name)
+    if (instance) {
+      return instance
+    }
 
     let Clss = null
     try {
@@ -13,7 +20,9 @@ export default class GetterFactory {
       throw new Error(`No getter for name ${name}`)
     }
 
-    let instance = new Clss()
+    instance = new Clss()
+    instances.push(instance)
+
     return instance
   }
 }
