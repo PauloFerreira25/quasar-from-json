@@ -18,9 +18,8 @@ export default class Event extends Base {
         .create(event.action.from)
         .get({
           type: event.action.config.type,
-          module: event.action.config.module,
-          to: event.action.config.to,
-          params: event.action.config.params
+          path: event.action.config.path,
+          params: event.action.config.actionParams
         }, config.vueInstance)
 
       this.setterFactory

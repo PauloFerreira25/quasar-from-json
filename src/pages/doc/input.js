@@ -13,6 +13,7 @@ arrayData.push({
     }
   }
 })
+
 arrayData.push({
   _description: 'Quasar input I18n',
   data: {
@@ -73,9 +74,8 @@ arrayData.push({
         from: 'store',
         config: {
           type: 'commit',
-          to: 'changeState',
-          module: 'doc',
-          params: {
+          path: 'doc/changeState',
+          actionParams: {
             state: 'qInput',
             value: '$action'
           }

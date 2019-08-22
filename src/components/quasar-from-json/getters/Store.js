@@ -12,6 +12,20 @@ export default class Store {
   __commit (definition, vueInstance) {
     return val => {
       let config = Object.keys(definition.params).reduce((config, key) => {
+        config[key] = definition.params[key] !== '$action'
+          ? definition.params[key]
+          : val
+
+        return config
+      }, {})
+
+      this.__callFunction(vueInstance, 'commit', `${definition.path}`, config)
+    }
+  }
+
+  __dispatch (definition, vueInstance) {
+    return val => {
+      let config = Object.keys(definition.params).reduce((config, key) => {
         config[key] = definition.config[key] !== '$action'
           ? definition.config[key]
           : val
@@ -19,17 +33,7 @@ export default class Store {
         return config
       }, {})
 
-      this.__callFunction(vueInstance, 'commit', `${definition.module}/${definition.to}`, config)
-    }
-  }
-
-  __dispatch (definition, vueInstance) {
-    return val => {
-      let parts = definition.path.split('.')
-      vueInstance.$store.commit(`${parts.shift()}/${definition.to}`, {
-        state: parts.shift(),
-        value: val
-      })
+      this.__callFunction(vueInstance, 'dispatch', `${definition.path}`, config)
     }
   }
 
