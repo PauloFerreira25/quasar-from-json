@@ -24,7 +24,16 @@ arrayData.push({
         outlined: true,
         dense: true
       }
-    }
+    },
+    rebind: [{
+      set: 'props.label',
+      get: {
+        from: 'i18n',
+        config: {
+          path: 'input.test'
+        }
+      }
+    }]
   }
 })
 
@@ -39,7 +48,25 @@ arrayData.push({
         outlined: true,
         dense: true
       }
-    }
+    },
+    rebind: [{
+      set: 'props.label',
+      get: {
+        from: 'i18n',
+        config: {
+          path: 'input.store'
+        }
+      }
+    }, {
+      set: 'on.input',
+      get: {
+        from: 'store',
+        config: {
+          type: 'commit',
+          path: 'doc.qInput'
+        }
+      }
+    }]
   }
 })
 

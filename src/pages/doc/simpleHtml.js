@@ -19,9 +19,10 @@ arrayData.push({
     key: 'test-key',
     ref: 'test-ref',
     rebind: [{
-      set: 'properties.domProps.innerHTML',
+      set: 'domProps.innerHTML',
       get: {
-        i18n: {
+        from: 'i18n',
+        config: {
           type: 't',
           path: 'app.name'
         }
@@ -36,10 +37,12 @@ arrayData.push({
     key: 'test-key',
     ref: 'test-ref',
     rebind: [{
-      set: 'properties.domProps.innerHTML',
+      set: 'domProps.innerHTML',
       get: {
-        store: {
-          path: 'app.name'
+        from: 'store',
+        config: {
+          type: 'state',
+          path: 'doc.text'
         }
       }
     }]

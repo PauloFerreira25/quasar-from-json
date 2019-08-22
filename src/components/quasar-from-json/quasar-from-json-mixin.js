@@ -27,6 +27,10 @@ export default {
       return this.properties.class
     },
 
+    domProps () {
+      return this.properties.domProps
+    },
+
     validate () {
       return Array.isArray(this.item.validate)
         ? this.item.validate

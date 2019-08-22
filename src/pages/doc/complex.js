@@ -20,7 +20,107 @@ let arrayData = []
 // Caso tenha um retorno do backend, se no retorno tiver um campo tipo e este for par, colocar "PF" no state "tipo" do usuario, se o retorno for "impar" colocar "PJ"
 arrayData.push({
   _description: 'Complex',
-  data: {}
+  data: {
+    type: 'div',
+    key: 'test-key',
+    ref: 'test-ref',
+    childrens: [{
+      type: 'q-label',
+      key: 'test-key',
+      ref: 'test-ref',
+      renderRules: [{
+        type: 'store',
+        config: {
+          path: 'user.tipo',
+          rules: ['notnull']
+        }
+      }],
+      rebind: [{
+        set: 'props.label',
+        get: {
+          from: 'i18n',
+          config: {
+            path: 'user.tipo'
+          }
+        }
+      }, {
+        set: 'on.input',
+        get: {
+          from: 'store',
+          config: {
+            type: 'commit',
+            path: 'user.tipo'
+          }
+        }
+      }]
+    }, {
+      type: 'q-input',
+      key: 'test-key',
+      ref: 'test-ref',
+      properties: {
+        props: {
+          type: 'number'
+        }
+      },
+      rebind: [{
+        set: 'props.label',
+        get: {
+          from: 'i18n',
+          config: {
+            path: 'input'
+          }
+        }
+      }, {
+        set: 'on.input',
+        get: {
+          from: 'store',
+          config: {
+            type: 'commit',
+            path: 'user.valorEntrada'
+          }
+        }
+      }, {
+        set: 'props.rules',
+        get: {
+          from: 'rules',
+          config: {
+            rules: ['required'],
+            message: {
+              type: 'i18n',
+              config: {
+                path: 'input.error'
+              }
+            }
+          }
+        }
+      }]
+    }, {
+      type: 'q-btn',
+      key: 'test-key',
+      ref: 'test-ref',
+      rebind: [{
+        set: 'props.label',
+        get: {
+          from: 'i18n',
+          config: {
+            path: 'btn.label'
+          }
+        }
+      }, {
+        set: 'on.click',
+        get: {
+          from: 'store',
+          config: {
+            type: 'dispatch',
+            action: 'callBackend',
+            onResponse: [{
+              // ?
+            }]
+          }
+        }
+      }]
+    }]
+  }
 })
 
 export default arrayData

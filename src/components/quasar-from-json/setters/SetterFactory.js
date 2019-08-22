@@ -4,14 +4,15 @@ export default class SetterFactory {
   create (setterName) {
     let name = textUtils.capitalizeFirstLetter(setterName)
 
-    let clss = null
+    let Clss = null
     try {
-      clss = require(`./${name}`)
-      clss = clss.default
+      Clss = require(`./${name}`)
+      Clss = Clss.default
     } catch (err) {
       throw new Error(`No setter for name ${name}`)
     }
 
-    return clss
+    let instance = new Clss()
+    return instance
   }
 }

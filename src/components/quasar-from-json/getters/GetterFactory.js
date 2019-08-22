@@ -4,15 +4,16 @@ export default class GetterFactory {
   create (getterName) {
     let name = textUtils.capitalizeFirstLetter(getterName)
 
-    let clss = null
+    let Clss = null
     try {
-      clss = require(`./${name}`)
-      clss = clss.default
+      Clss = require(`./${name}`)
+      Clss = Clss.default
     } catch (err) {
       console.error(err)
       throw new Error(`No getter for name ${name}`)
     }
 
-    return clss
+    let instance = new Clss()
+    return instance
   }
 }

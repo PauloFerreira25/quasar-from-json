@@ -6,5 +6,9 @@ export default {
   success: 'Action was successful',
   app: {
     name: 'Aplicativo'
+  },
+  input: {
+    test: 'Teste input',
+    store: 'Store input'
   }
 }

@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     a () {
-      return this.$store.state.doc
+      return this.$store
     }
   },
   data () {
@@ -36,89 +36,4 @@ export default {
     }
   }
 }
-
-// {
-//         _description: 'Div com texto',
-//         data: {
-//           type: 'div',
-//           key: 'test-key',
-//           ref: 'test-ref',
-//           properties: {
-//             domProps: {
-//               innerHTML: 'Div com texto'
-//             }
-//           }
-//         }
-//       }, {
-//         description: 'Div com texto do i18n',
-//         data: {
-//           type: 'div',
-//           key: 'test-key',
-//           ref: 'test-ref',
-//           get: [{
-//             type: 'i18n',
-//             path: 'app.name',
-//             ref: 'teste_i18n'
-//           }],
-//           set: [{
-//             path: 'domProps.innerHTML',
-//             type: 'getter',
-//             getter: 'teste_i18n'
-//           }]
-//         }
-//       }, {
-//         description: 'Quasar input',
-//         data: {
-//           type: 'q-input',
-//           key: 'test-key',
-//           ref: 'test-ref',
-//           properties: {
-//             props: {
-//               outlined: true,
-//               dense: true
-//             }
-//           },
-//           get: [{
-//             type: 'i18n',
-//             path: 'app.name',
-//             ref: 'i18n'
-//           }],
-//           set: [{
-//             path: 'props.label',
-//             type: 'getter',
-//             getter: 'i18n'
-//           }, {
-//             path: 'props.value',
-//             type: 'raw',
-//             text: 'i18n'
-//           }]
-//         }
-//       }, {
-//         description: '1 getter 2 setters',
-//         data: {
-//           type: 'q-input',
-//           key: 'test-key',
-//           ref: 'test-ref',
-//           properties: {
-//             props: {
-//               outlined: true,
-//               dense: true
-//             }
-//           },
-//           get: [{
-//             type: 'i18n',
-//             path: 'app.name',
-//             ref: 'i18n'
-//           }],
-//           set: [{
-//             path: 'props.label',
-//             type: 'getter',
-//             getter: 'i18n'
-//           }, {
-//             path: 'props.hint',
-//             type: 'getter',
-//             getter: 'i18n'
-//           }]
-//         }
-//       }
 </script>

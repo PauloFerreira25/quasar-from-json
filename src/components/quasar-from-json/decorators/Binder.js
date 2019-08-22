@@ -1,7 +1,7 @@
 import Base from './Base'
 import SetterFactory from '../setters/SetterFactory'
 
-export default class Setter extends Base {
+export default class Binder extends Base {
   constructor (decorator) {
     super()
     this.decorator = decorator
@@ -10,11 +10,12 @@ export default class Setter extends Base {
 
   mount (config) {
     config = this.decorator.mount(config)
-    config.vueInstance.item.set
-      .map(setter => this.setterFactory
-        .create(setter.type)
-        .set(setter, config)
-      )
+
+    config.vueInstance.item.rebind.map(bind => this.setterFactory
+      .create('get')
+      .set(bind, config)
+    )
+
     return config
   }
 }
