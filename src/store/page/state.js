@@ -1,3 +1,5 @@
 export default {
-  currentPage: null
+  currentPage: '',
+  valorEntrada: '',
+  tipo: null
 }

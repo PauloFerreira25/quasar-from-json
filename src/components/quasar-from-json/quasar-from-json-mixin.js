@@ -1,6 +1,23 @@
+import Validator from 'validatorjs'
+
+import GetterFactory from './getters/GetterFactory'
+
 export default {
   methods: {
-    checkValidate (e, val) {}
+    render () {
+      if (!this.item.render) {
+        return true
+      }
+
+      let getterFactory = new GetterFactory()
+      return Object.entries(this.item.render)
+        .map(([type, render]) => {
+          let value = getterFactory.create(type)
+            .get(render, this)
+          return new Validator({ value }, { value: render.rules.join('|') }).passes()
+        })
+        .find(f => !!f)
+    }
   },
   computed: {
     key () {

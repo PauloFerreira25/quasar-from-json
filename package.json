@@ -14,7 +14,10 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
+    "i": "^0.3.6",
+    "npm": "^6.11.2",
     "quasar": "^1.0.0",
+    "validatorjs": "^3.15.1",
     "vue-i18n": "^8.0.0"
   },
   "devDependencies": {

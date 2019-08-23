@@ -8,7 +8,11 @@ export default {
     name: 'Aplicativo'
   },
   input: {
+    error: 'Erooou',
     test: 'Teste input',
     store: 'Store input'
+  },
+  btn: {
+    label: 'Label'
   }
 }

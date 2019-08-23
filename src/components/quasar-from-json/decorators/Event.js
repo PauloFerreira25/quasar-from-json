@@ -13,12 +13,8 @@ export default class Event extends Base {
   mount (config) {
     config = this.decorator.mount(config)
 
-    Object.keys(config.vueInstance.item.events).forEach(e => {
-      let event = config.vueInstance.item.events[e]
-
-      Object.keys(event).forEach(f => {
-        let eventHandler = event[f]
-
+    Object.entries(config.vueInstance.item.events).forEach(([e, event]) => {
+      Object.entries(event).forEach(([f, eventHandler]) => {
         let func = this.getterFactory
           .create(f)
           .get({

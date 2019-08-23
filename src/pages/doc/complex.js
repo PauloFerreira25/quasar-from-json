@@ -25,35 +25,40 @@ arrayData.push({
     key: 'test-key',
     ref: 'test-ref',
     childrens: [{
-      type: 'q-label',
+      type: 'div',
       key: 'test-key',
       ref: 'test-ref',
-      renderRules: [{
+      render: {
         store: {
-          path: 'user.tipo',
-          rules: ['notnull']
+          type: 'state',
+          path: 'page.tipo',
+          rules: ['required']
         }
-      }],
+      },
       rebind: [{
-        set: 'props.label',
+        set: 'domProps.innerHTML',
         get: {
           i18n: {
-            path: 'user.tipo'
+            path: 'app.name'
           }
         }
-      }, {
-        set: 'on.input',
-        get: {
+      }],
+      events: {
+        input: {
           store: {
             type: 'commit',
-            path: 'user.tipo'
+            path: 'doc/changeState',
+            actionParams: {
+              state: 'qInput',
+              value: '$action'
+            }
           }
         }
-      }]
+      }
     }, {
       type: 'q-input',
-      key: 'test-key',
-      ref: 'test-ref',
+      key: 'a',
+      ref: 'b',
       properties: {
         props: {
           type: 'number'
@@ -63,17 +68,24 @@ arrayData.push({
         set: 'props.label',
         get: {
           i18n: {
-            path: 'input'
+            path: 'input.test'
+          }
+        }
+      }, {
+        set: 'props.value',
+        get: {
+          store: {
+            type: 'state',
+            path: 'doc.valorEntrada'
           }
         }
       }, {
         set: 'props.rules',
         get: {
           rules: {
-            rules: ['required'],
+            validations: ['required'], // https://www.npmjs.com/package/validatorjs
             message: {
-              type: 'i18n',
-              config: {
+              i18n: {
                 path: 'input.error'
               }
             }
@@ -84,7 +96,7 @@ arrayData.push({
         input: {
           store: {
             type: 'commit',
-            path: 'user/changeState',
+            path: 'doc/changeState',
             actionParams: {
               state: 'valorEntrada',
               value: '$action'
@@ -96,6 +108,9 @@ arrayData.push({
       type: 'q-btn',
       key: 'test-key',
       ref: 'test-ref',
+      properties: {
+        class: 'q-mt-md'
+      },
       rebind: [{
         set: 'props.label',
         get: {
@@ -103,16 +118,16 @@ arrayData.push({
             path: 'btn.label'
           }
         }
-      }]
-    }],
-    events: {
-      click: {
-        store: {
-          type: 'dispatch',
-          path: 'user/callBackend'
+      }],
+      events: {
+        click: {
+          store: {
+            type: 'dispatch',
+            path: 'user/callBackend'
+          }
         }
       }
-    }
+    }]
   }
 })
 
