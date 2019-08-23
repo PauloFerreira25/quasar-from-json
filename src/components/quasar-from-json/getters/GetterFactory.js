@@ -4,6 +4,11 @@ let instances = []
 
 export default class GetterFactory {
   create (getterName) {
+    if (!getterName) {
+      console.warn(`Getter name is required!`)
+      return
+    }
+
     let name = textUtils.capitalizeFirstLetter(getterName)
 
     let instance = instances.find(instance => instance.constructor.name === name)

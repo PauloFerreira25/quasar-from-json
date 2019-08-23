@@ -17,11 +17,7 @@ export default class Event extends Base {
       Object.entries(event).forEach(([f, eventHandler]) => {
         let func = this.getterFactory
           .create(f)
-          .get({
-            type: eventHandler.type,
-            path: eventHandler.path,
-            params: eventHandler.actionParams
-          }, config.vueInstance)
+          .get(eventHandler, config.vueInstance)
 
         this.setterFactory
           .create('raw')

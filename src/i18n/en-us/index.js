@@ -14,5 +14,7 @@ export default {
   },
   btn: {
     label: 'Label'
-  }
+  },
+  pj: 'Pessoa Jurídica',
+  pf: 'Pessoa Física'
 }

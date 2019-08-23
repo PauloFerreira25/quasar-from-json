@@ -22,24 +22,31 @@ arrayData.push({
   _description: 'Complex',
   data: {
     type: 'div',
-    key: 'test-key',
-    ref: 'test-ref',
+    key: 'div-key',
+    ref: 'div-ref',
     childrens: [{
       type: 'div',
-      key: 'test-key',
-      ref: 'test-ref',
+      key: 'label-key',
+      ref: 'label-ref',
+      properties: {
+        class: 'q-mb-sm'
+      },
       render: {
         store: {
           type: 'state',
           path: 'page.tipo',
-          rules: ['required']
+          rules: ['required'] // https://www.npmjs.com/package/validatorjs
         }
       },
       rebind: [{
         set: 'domProps.innerHTML',
         get: {
           i18n: {
-            path: 'app.name'
+            path: {
+              store: {
+                path: 'user.tipo'
+              }
+            }
           }
         }
       }],
@@ -48,7 +55,7 @@ arrayData.push({
           store: {
             type: 'commit',
             path: 'doc/changeState',
-            actionParams: {
+            params: {
               state: 'qInput',
               value: '$action'
             }
@@ -57,11 +64,13 @@ arrayData.push({
       }
     }, {
       type: 'q-input',
-      key: 'a',
-      ref: 'b',
+      key: 'input-key',
+      ref: 'input-ref',
       properties: {
         props: {
-          type: 'number'
+          type: 'number',
+          dense: true,
+          outlined: true
         }
       },
       rebind: [{
@@ -76,7 +85,7 @@ arrayData.push({
         get: {
           store: {
             type: 'state',
-            path: 'doc.valorEntrada'
+            path: 'user.valorEntrada'
           }
         }
       }, {
@@ -96,8 +105,8 @@ arrayData.push({
         input: {
           store: {
             type: 'commit',
-            path: 'doc/changeState',
-            actionParams: {
+            path: 'user/changeState',
+            params: {
               state: 'valorEntrada',
               value: '$action'
             }
@@ -106,11 +115,8 @@ arrayData.push({
       }
     }, {
       type: 'q-btn',
-      key: 'test-key',
-      ref: 'test-ref',
-      properties: {
-        class: 'q-mt-md'
-      },
+      key: 'btn-key',
+      ref: 'btn-ref',
       rebind: [{
         set: 'props.label',
         get: {
@@ -121,10 +127,32 @@ arrayData.push({
       }],
       events: {
         click: {
-          store: {
-            type: 'dispatch',
-            path: 'user/callBackend'
-          }
+          cascade: [{
+            type: 'validate',
+            config: {
+              store: {
+                validations: ['required'],
+                path: 'user.valorEntrada'
+              }
+            }
+          }, {
+            type: 'store',
+            config: {
+              type: 'dispatch',
+              path: 'user/callBackend'
+            }
+          }, {
+            type: 'store',
+            lastValue: true,
+            config: {
+              type: 'commit',
+              path: 'user/changeState',
+              params: {
+                state: 'tipo',
+                value: '$action'
+              }
+            }
+          }]
         }
       }
     }]

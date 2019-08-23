@@ -39,7 +39,6 @@ arrayData.push({
       set: 'domProps.innerHTML',
       get: {
         store: {
-          type: 'state',
           path: 'doc.text'
         }
       }

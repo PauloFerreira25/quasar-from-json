@@ -4,6 +4,11 @@ let instances = []
 
 export default class SetterFactory {
   create (setterName) {
+    if (!setterName) {
+      console.warn(`Setter name is required!`)
+      return
+    }
+
     let name = textUtils.capitalizeFirstLetter(setterName)
 
     let instance = instances.find(instance => instance.constructor.name === name)

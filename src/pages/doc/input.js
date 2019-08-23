@@ -60,7 +60,6 @@ arrayData.push({
       set: 'props.value',
       get: {
         store: {
-          type: 'state',
           path: 'doc.qInput'
         }
       }
@@ -70,7 +69,7 @@ arrayData.push({
         store: {
           type: 'commit',
           path: 'doc/changeState',
-          actionParams: {
+          params: {
             state: 'qInput',
             value: '$action'
           }

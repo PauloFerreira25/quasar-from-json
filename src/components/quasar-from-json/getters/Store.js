@@ -2,7 +2,7 @@ import pathUtils from '../utils/path'
 
 export default class Store {
   get (definition, vueInstance) {
-    return definition.type === 'state'
+    return !definition.type || definition.type === 'state'
       ? this.__state(definition, vueInstance)
       : val => {
         let config = null
@@ -18,15 +18,15 @@ export default class Store {
           }, {})
         }
 
-        this.__callFunction(vueInstance, definition.type, `${definition.path}`, config)
+        return this.__callFunction(vueInstance, definition.type, `${definition.path}`, config)
       }
   }
 
   __callFunction (vueInstance, action, ...args) {
-    vueInstance.$store[action](...args)
+    return vueInstance.$store[action](...args)
   }
 
   __state (definition, vueInstance) {
-    return pathUtils.find(definition.path.split('.'), vueInstance.$store[definition.type])
+    return pathUtils.find(definition.path.split('.'), vueInstance.$store.state)
   }
 }
