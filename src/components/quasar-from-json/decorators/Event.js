@@ -13,19 +13,21 @@ export default class Event extends Base {
   mount (config) {
     config = this.decorator.mount(config)
 
-    Object.entries(config.vueInstance.item.events).forEach(([e, event]) => {
-      Object.entries(event).forEach(([f, eventHandler]) => {
-        let func = this.getterFactory
-          .create(f)
-          .get(eventHandler, config.vueInstance)
+    Object.entries(config.vueInstance.item.events).forEach(([e, events]) => {
+      events.map(event =>
+        Object.entries(event).forEach(([f, eventHandler]) => {
+          let func = this.getterFactory
+            .create(f)
+            .get(eventHandler, config.vueInstance)
 
-        this.setterFactory
-          .create('raw')
-          .set({
-            path: `on.${e}`,
-            data: func
-          }, config)
-      })
+          this.setterFactory
+            .create('raw')
+            .set({
+              path: `on.${e}`,
+              data: func
+            }, config)
+        })
+      )
     })
 
     return config

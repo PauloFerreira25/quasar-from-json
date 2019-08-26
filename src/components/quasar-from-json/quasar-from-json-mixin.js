@@ -1,5 +1,6 @@
 import Validator from 'validatorjs'
 
+import Decorators from './decorators'
 import GetterFactory from './getters/GetterFactory'
 
 export default {
@@ -17,8 +18,52 @@ export default {
           return new Validator({ value }, { value: render.rules.join('|') }).passes()
         })
         .find(f => !!f)
+    },
+
+    register () {
+      let mutation = new GetterFactory().getterFactory
+        .create('store')
+        .get({
+          type: 'commit',
+          path: 'global/addRef',
+          params: this.ref
+        }, this)
+      mutation()
+    },
+
+    attributesFactory () {
+      let decorators = []
+      if (Array.isArray(this.item.set) && this.item.set.length > 0) {
+        decorators.push(Decorators.Setter)
+      }
+
+      if (Array.isArray(this.item.rebind) && this.item.rebind.length > 0) {
+        decorators.push(Decorators.Binder)
+      }
+
+      if (this.item.events) {
+        decorators.push(Decorators.Event)
+      }
+
+      let data = decorators
+        .reduce((DecoratorAnterior, Atual) => new Atual(DecoratorAnterior), new Decorators.Base())
+        .mount({
+          baseData: {
+            key: this.key,
+            ref: this.ref,
+            domProps: this.domProps,
+            props: this.props,
+            atts: this.attrs,
+            class: this.class
+          },
+          vueInstance: this
+        }).baseData
+
+      // this.register()
+      return data
     }
   },
+
   computed: {
     key () {
       return this.item.key

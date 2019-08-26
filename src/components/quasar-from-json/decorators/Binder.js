@@ -16,7 +16,7 @@ export default class Binder extends Base {
         .create('get')
       Object.keys(bind.get)
         .map(key => getter
-          .set(key, bind.get[key], bind.set, config)
+          .set(key, bind.get[key], bind.set, config, bind)
         )
     })
 

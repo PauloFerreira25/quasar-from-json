@@ -23,11 +23,11 @@ arrayData.push({
   data: {
     type: 'div',
     key: 'div-key',
-    ref: 'div-ref',
+    ref: 'base-ref',
     childrens: [{
       type: 'div',
       key: 'label-key',
-      ref: 'label-ref',
+      ref: 'some-ref',
       properties: {
         class: 'q-mb-sm'
       },
@@ -51,7 +51,7 @@ arrayData.push({
         }
       }],
       events: {
-        input: {
+        input: [{
           store: {
             type: 'commit',
             path: 'doc/changeState',
@@ -60,7 +60,7 @@ arrayData.push({
               value: '$action'
             }
           }
-        }
+        }]
       }
     }, {
       type: 'q-input',
@@ -102,7 +102,7 @@ arrayData.push({
         }
       }],
       events: {
-        input: {
+        input: [{
           store: {
             type: 'commit',
             path: 'user/changeState',
@@ -111,12 +111,12 @@ arrayData.push({
               value: '$action'
             }
           }
-        }
+        }]
       }
     }, {
       type: 'q-btn',
       key: 'btn-key',
-      ref: 'btn-ref',
+      ref: 'validate',
       rebind: [{
         set: 'props.label',
         get: {
@@ -126,7 +126,7 @@ arrayData.push({
         }
       }],
       events: {
-        click: {
+        click: [{
           cascade: [{
             type: 'validate',
             config: {
@@ -153,7 +153,7 @@ arrayData.push({
               }
             }
           }]
-        }
+        }]
       }
     }]
   }

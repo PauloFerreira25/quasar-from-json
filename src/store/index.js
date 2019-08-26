@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import page from './page'
 import doc from './doc'
 import user from './user'
+import global from './global'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ export default function (/* { ssrContext } */) {
     modules: {
       page,
       doc,
-      user
+      user,
+      global
     },
 
     // enable strict mode (adds overhead!)
