@@ -65,7 +65,7 @@ arrayData.push({
       }
     }],
     events: {
-      input: {
+      input: [{
         store: {
           type: 'commit',
           path: 'doc/changeState',
@@ -74,7 +74,7 @@ arrayData.push({
             value: '$action'
           }
         }
-      }
+      }]
     }
   }
 })
