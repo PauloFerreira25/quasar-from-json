@@ -190,6 +190,21 @@ arrayData.push({
               path: 'user/callBackend'
             }
           }, {
+            type: 'conditional',
+            lastValue: true,
+            config: {
+              if: {
+                path: 'tipo',
+                is: 'even'
+              },
+              then: {
+                $return: 'PF'
+              },
+              else: {
+                $return: 'PJ'
+              }
+            }
+          }, {
             type: 'store',
             lastValue: true,
             config: {

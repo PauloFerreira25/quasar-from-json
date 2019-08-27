@@ -15,6 +15,6 @@ export default {
   btn: {
     label: 'Click me'
   },
-  pj: 'Pessoa Jurídica',
-  pf: 'Pessoa Física'
+  PJ: 'Pessoa Jurídica',
+  PF: 'Pessoa Física'
 }
