@@ -22,7 +22,7 @@ export default class Rules {
 
     return definition.validations.map(validation =>
       val => {
-        if (!isNaN(val)) {
+        if (val && !isNaN(val)) {
           val = Number(val)
         }
 
@@ -39,7 +39,7 @@ export default class Rules {
       if (typeof c.validate === 'function') {
         c.validate()
       }
-      return c
-    }).find(f => f.hasError)
+      return c.hasError
+    }).find(f => !f)
   }
 }
