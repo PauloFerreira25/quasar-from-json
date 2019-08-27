@@ -23,18 +23,11 @@ export default class Conditional {
         return null
       }
 
-      let fResult = this[`__${definition.if.is}`](definition, val)
-      console.log('fResult', fResult)
-
-      if (fResult) {
-
-      }
-
-      let lookfor = fResult
+      let lookfor = this[`__${definition.if.is}`](definition, val)
         ? 'then'
         : 'else'
-      let tFunc = Object.keys(definition[lookfor])[0]
 
+      let tFunc = Object.keys(definition[lookfor])[0]
       if (typeof this[`__${tFunc}`] !== 'function') {
         console.warn(`${tFunc} não definida`)
         return null
@@ -46,7 +39,6 @@ export default class Conditional {
 
   __even (definition, value) {
     let val = pathUtils.find(definition.if.path.split('.'), value)
-    console.log('Val found', val)
     return !isNaN(val) && val % 2 === 0
   }
 
