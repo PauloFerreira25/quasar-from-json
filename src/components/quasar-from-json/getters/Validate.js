@@ -9,6 +9,6 @@ export default class Validate {
     let result = this.getterFactory
       .create('Rules')
       .validateAll() // Específico do rules
-    return result
+    return result || null
   }
 }

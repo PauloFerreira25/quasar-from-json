@@ -9,12 +9,12 @@ export default class Conditional {
   get (definition, vueInstance) {
     if (!definition.if) {
       console.warn(`Condicional definida sem o if`)
-      return () => false
+      return () => null
     }
 
     if (!definition.then) {
       console.warn(`Condicional definida sem o then`)
-      return () => false
+      return () => null
     }
 
     return val => {

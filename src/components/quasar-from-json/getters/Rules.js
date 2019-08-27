@@ -40,6 +40,6 @@ export default class Rules {
         c.validate()
       }
       return c.hasError
-    }).find(f => !f)
+    }).find(f => f)
   }
 }
