@@ -20,17 +20,6 @@ export default {
         .find(f => !!f)
     },
 
-    register () {
-      let mutation = new GetterFactory().getterFactory
-        .create('store')
-        .get({
-          type: 'commit',
-          path: 'global/addRef',
-          params: this.ref
-        }, this)
-      mutation()
-    },
-
     attributesFactory () {
       let decorators = []
       if (Array.isArray(this.item.set) && this.item.set.length > 0) {
@@ -59,7 +48,6 @@ export default {
           vueInstance: this
         }).baseData
 
-      // this.register()
       return data
     }
   },

@@ -5,20 +5,12 @@ export default class Store {
     return !definition.type || definition.type === 'state'
       ? this.__state(definition, vueInstance)
       : val => {
-        let config = null
-        if (!definition.params) {
-          console.warn(`Store getter params undefined - ${definition.params}`)
-        } else {
-          config = Object.keys(definition.params).reduce((config, key) => {
-            config[key] = definition.params[key] !== '$action'
-              ? definition.params[key]
-              : val
-
-            return config
-          }, {})
-        }
-
-        return this.__callFunction(vueInstance, definition.type, `${definition.path}`, config)
+        return this.__callFunction(
+          vueInstance,
+          definition.type,
+          `${definition.path}`,
+          this.__mountConfig(definition.params, val)
+        )
       }
   }
 
@@ -28,5 +20,24 @@ export default class Store {
 
   __state (definition, vueInstance) {
     return pathUtils.find(definition.path.split('.'), vueInstance.$store.state)
+  }
+
+  __mountConfig (params, val) {
+    let config = null
+    if (Array.isArray(params)) {
+      config = params
+    } else if (typeof params !== 'object') {
+      config = params
+    } else {
+      config = Object.keys(params).reduce((config, key) => {
+        config[key] = params[key] !== '$action'
+          ? params[key]
+          : val
+
+        return config
+      }, {})
+    }
+
+    return config
   }
 }

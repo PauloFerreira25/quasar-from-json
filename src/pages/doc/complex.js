@@ -65,7 +65,7 @@ arrayData.push({
     }, {
       type: 'q-input',
       key: 'input-key',
-      ref: 'input-ref',
+      ref: 'input',
       properties: {
         props: {
           type: 'number',
@@ -114,6 +114,57 @@ arrayData.push({
         }]
       }
     }, {
+      type: 'q-input',
+      key: 'input-key',
+      ref: 'input2',
+      properties: {
+        props: {
+          type: 'number',
+          dense: true,
+          outlined: true
+        }
+      },
+      rebind: [{
+        set: 'props.label',
+        get: {
+          raw: {
+            path: 'teste'
+          }
+        }
+      }, {
+        set: 'props.value',
+        get: {
+          store: {
+            type: 'state',
+            path: 'user.teste'
+          }
+        }
+      }, {
+        set: 'props.rules',
+        get: {
+          rules: {
+            validations: ['required'], // https://www.npmjs.com/package/validatorjs
+            message: {
+              i18n: {
+                path: 'input.error'
+              }
+            }
+          }
+        }
+      }],
+      events: {
+        input: [{
+          store: {
+            type: 'commit',
+            path: 'user/changeState',
+            params: {
+              state: 'teste',
+              value: '$action'
+            }
+          }
+        }]
+      }
+    }, {
       type: 'q-btn',
       key: 'btn-key',
       ref: 'validate',
@@ -128,13 +179,7 @@ arrayData.push({
       events: {
         click: [{
           cascade: [{
-            type: 'validate',
-            config: {
-              store: {
-                validations: ['required'],
-                path: 'user.valorEntrada'
-              }
-            }
+            type: 'validate'
           }, {
             type: 'store',
             config: {

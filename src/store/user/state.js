@@ -1,4 +1,5 @@
 export default {
   tipo: '',
-  valorEntrada: ''
+  valorEntrada: '',
+  teste: ''
 }

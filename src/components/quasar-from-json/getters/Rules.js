@@ -5,9 +5,21 @@ import GetterFactory from './GetterFactory'
 export default class Rules {
   constructor () {
     this.getterFactory = new GetterFactory()
+    this.components = []
   }
 
   get (definition, vueInstance) {
+    vueInstance.$refs = new Proxy(vueInstance.$refs, {
+      set: (obj, prop, value) => {
+        if (prop === vueInstance.item.ref) {
+          this.components.push(value)
+        }
+
+        obj[prop] = value
+        return true
+      }
+    })
+
     return definition.validations.map(validation =>
       val => {
         let validator = new Validator({ val }, { val: validation })
@@ -16,5 +28,14 @@ export default class Rules {
           .get(definition.message[messageHandler], vueInstance)
       }
     )
+  }
+
+  validateAll () {
+    return !this.components.map(c => {
+      if (typeof c.validate === 'function') {
+        c.validate()
+      }
+      return c
+    }).find(f => f.hasError)
   }
 }
