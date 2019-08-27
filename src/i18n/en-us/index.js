@@ -12,8 +12,19 @@ export default {
     test: 'Teste input',
     store: 'Store input'
   },
+  message: {
+    login: {
+      t1: 'Log in',
+      input: {
+        account: 'Email or user',
+        password: 'Password'
+      },
+      forgot: 'Forgot your email or username?'
+    }
+  },
   btn: {
-    label: 'Click me'
+    label: 'Click me',
+    next: 'Next'
   },
   PJ: 'Pessoa Jurídica',
   PF: 'Pessoa Física'

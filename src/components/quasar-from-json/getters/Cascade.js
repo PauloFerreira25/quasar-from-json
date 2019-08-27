@@ -13,7 +13,7 @@ export default class Cascade {
     return () => definition.reduce(async (anterior, atual) => {
       let result = await anterior
 
-      if (result === null) {
+      if (result === null && !atual.execOnError) {
         return result
       }
 

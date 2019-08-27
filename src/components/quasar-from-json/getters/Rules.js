@@ -36,10 +36,11 @@ export default class Rules {
 
   validateAll () {
     return !this.components.map(c => {
-      if (typeof c.validate === 'function') {
+      if (c && typeof c.validate === 'function') {
         c.validate()
+        return c.hasError
       }
-      return c.hasError
+      return true
     }).find(f => f)
   }
 }
