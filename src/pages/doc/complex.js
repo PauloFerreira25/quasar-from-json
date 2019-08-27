@@ -168,6 +168,9 @@ arrayData.push({
       type: 'q-btn',
       key: 'btn-key',
       ref: 'validate',
+      properties: {
+        class: 'bg-primary text-white'
+      },
       rebind: [{
         set: 'props.label',
         get: {

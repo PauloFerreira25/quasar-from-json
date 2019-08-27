@@ -13,7 +13,7 @@ export default {
     store: 'Store input'
   },
   btn: {
-    label: 'Label'
+    label: 'Click me'
   },
   pj: 'Pessoa Jurídica',
   pf: 'Pessoa Física'
