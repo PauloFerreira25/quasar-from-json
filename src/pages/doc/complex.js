@@ -143,7 +143,7 @@ arrayData.push({
         set: 'props.rules',
         get: {
           rules: {
-            validations: ['required'], // https://www.npmjs.com/package/validatorjs
+            validations: ['required', 'min:1'], // https://www.npmjs.com/package/validatorjs
             message: {
               i18n: {
                 path: 'input.error'
