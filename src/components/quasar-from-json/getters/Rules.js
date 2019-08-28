@@ -11,8 +11,15 @@ export default class Rules {
   get (definition, vueInstance) {
     vueInstance.$refs = new Proxy(vueInstance.$refs, {
       set: (obj, prop, value) => {
-        if (prop === vueInstance.item.ref) {
-          this.components.push(value)
+        this.__clean()
+
+        if (value) {
+          let index = this.components.findIndex(ref => ref.$vnode.data.ref === vueInstance.item.ref)
+          if (index !== -1) {
+            this.components[index] = value
+          } else if (prop === vueInstance.item.ref) {
+            this.components.push(value)
+          }
         }
 
         obj[prop] = value
@@ -39,11 +46,10 @@ export default class Rules {
 
   validateAll () {
     return !this.components.map(c => {
-      if (c && typeof c.validate === 'function') {
+      if (typeof c.validate === 'function') {
         c.validate()
-        return c.hasError
       }
-      return true
+      return c.hasError
     }).find(f => f)
   }
 
@@ -54,5 +60,9 @@ export default class Rules {
 
     let validator = new Validator({ input }, { input: validations })
     return validator.passes()
+  }
+
+  __clean () {
+    this.components = this.components.filter(ref => ref && ref.$vnode && !ref._isDestroyed)
   }
 }

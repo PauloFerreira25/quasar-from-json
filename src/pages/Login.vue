@@ -173,6 +173,13 @@ export default {
                         value: '$action'
                       }
                     }
+                  }],
+                  keyup: [{
+                    key: 'enter',
+                    ref: {
+                      on: 'btn.sendAccount',
+                      action: 'click'
+                    }
                   }]
                 }
               }, {
@@ -236,6 +243,13 @@ export default {
                         value: '$action'
                       }
                     }
+                  }],
+                  keyup: [{
+                    key: 'enter',
+                    ref: {
+                      on: 'btn.sendPassword',
+                      action: 'click'
+                    }
                   }]
                 }
               }]
@@ -271,6 +285,7 @@ export default {
               childrens: [{
                 type: 'q-btn',
                 key: 'btn-sendAccount',
+                ref: 'btn.sendAccount',
                 render: {
                   store: {
                     type: 'state',
@@ -346,6 +361,7 @@ export default {
               }, {
                 type: 'q-btn',
                 key: 'btn-sendPassword',
+                ref: 'btn.sendPassword',
                 render: {
                   store: {
                     type: 'state',
@@ -388,11 +404,17 @@ export default {
                       }
                     }, {
                       type: 'validate'
+                      // TODO: Selecionar o que vai validar
                     }, {
                       type: 'store',
                       config: {
                         type: 'dispatch',
                         path: 'global/simulateLogin'
+                      }
+                    }, {
+                      type: 'router',
+                      config: {
+                        path: '/'
                       }
                     }, {
                       type: 'store',
@@ -404,11 +426,6 @@ export default {
                           state: 'login.loading',
                           value: false
                         }
-                      }
-                    }, {
-                      type: 'router',
-                      config: {
-                        path: '/'
                       }
                     }]
                   }]
