@@ -21,6 +21,7 @@ export default {
           type: 'q-card',
           properties: {
             class: 'login-card q-pa-lg',
+            style: 'min-height: 400px; min-width: 400px',
             props: {
               flat: true,
               bordered: true
@@ -65,6 +66,13 @@ export default {
             },
             childrens: [{
               type: 'q-chip',
+              properties: {
+                class: 'cursor-pointer',
+                props: {
+                  clickable: true,
+                  'icon-right': 'keyboard_arrow_down'
+                }
+              },
               render: {
                 store: {
                   type: 'state',
@@ -79,149 +87,176 @@ export default {
                     path: 'global.login.form.account'
                   }
                 }
-              }]
+              }],
+              events: {
+                click: [{
+                  store: {
+                    type: 'commit',
+                    path: 'global/changeState',
+                    params: {
+                      state: 'login.step',
+                      value: 'step-account'
+                    }
+                  }
+                }]
+              }
             }]
           }, {
             type: 'q-card-section',
             childrens: [{
-              type: 'q-input',
-              ref: 'account',
-              key: 'account-input',
+              type: 'transition',
               properties: {
                 props: {
-                  outlined: true,
-                  'lazy-rules': true
-                },
-                attrs: {
-                  id: 'account'
+                  name: 'slide-fade',
+                  mode: 'out-in'
                 }
               },
-              render: {
-                store: {
-                  type: 'state',
-                  path: 'global.login.step',
-                  rules: ['in:step-account'] // https://www.npmjs.com/package/validatorjs
-                }
-              },
-              rebind: [{
-                set: 'props.label',
-                get: {
-                  i18n: {
-                    path: 'message.login.input.account'
+              childrens: [{
+                type: 'q-input',
+                ref: 'account',
+                key: 'account-input',
+                properties: {
+                  class: 'no-padding',
+                  props: {
+                    outlined: true,
+                    'lazy-rules': true
+                  },
+                  attrs: {
+                    id: 'account'
                   }
-                }
-              }, {
-                set: 'props.value',
-                get: {
+                },
+                render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.form.account'
+                    path: 'global.login.step',
+                    rules: ['in:step-account'] // https://www.npmjs.com/package/validatorjs
                   }
-                }
-              }, {
-                set: 'props.rules',
-                get: {
-                  rules: {
-                    // TODO: Fazer validação OR
-                    validations: ['required', 'min:8', 'email'], // https://www.npmjs.com/package/validatorjs
-                    message: {
-                      i18n: {
-                        path: 'input.error'
+                },
+                rebind: [{
+                  set: 'props.label',
+                  get: {
+                    i18n: {
+                      path: 'message.login.input.account'
+                    }
+                  }
+                }, {
+                  set: 'props.value',
+                  get: {
+                    store: {
+                      type: 'state',
+                      path: 'global.login.form.account'
+                    }
+                  }
+                }, {
+                  set: 'props.rules',
+                  get: {
+                    rules: {
+                      // TODO: Fazer validação OR
+                      validations: ['required', 'min:8', 'email'], // https://www.npmjs.com/package/validatorjs
+                      message: {
+                        i18n: {
+                          path: 'input.error'
+                        }
                       }
                     }
                   }
-                }
-              }],
-              events: {
-                input: [{
-                  store: {
-                    type: 'commit',
-                    path: 'global/changeState',
-                    params: {
-                      state: 'login.form.account',
-                      value: '$action'
+                }],
+                events: {
+                  input: [{
+                    store: {
+                      type: 'commit',
+                      path: 'global/changeState',
+                      params: {
+                        state: 'login.form.account',
+                        value: '$action'
+                      }
                     }
-                  }
-                }]
-              }
-            }, {
-              type: 'q-input',
-              key: 'password-input',
-              ref: 'password-input',
-              properties: {
-                props: {
-                  outlined: true,
-                  type: 'password'
-                },
-                attrs: {
-                  id: 'password-input'
-                }
-              },
-              render: {
-                store: {
-                  type: 'state',
-                  path: 'global.login.step',
-                  rules: ['in:step-password'] // https://www.npmjs.com/package/validatorjs
-                }
-              },
-              rebind: [{
-                set: 'props.label',
-                get: {
-                  i18n: {
-                    path: 'message.login.input.password'
-                  }
+                  }]
                 }
               }, {
-                set: 'props.value',
-                get: {
+                type: 'q-input',
+                key: 'password-input',
+                ref: 'password-input',
+                properties: {
+                  props: {
+                    outlined: true,
+                    type: 'password'
+                  },
+                  attrs: {
+                    id: 'password-input'
+                  }
+                },
+                render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.form.password'
+                    path: 'global.login.step',
+                    rules: ['in:step-password'] // https://www.npmjs.com/package/validatorjs
                   }
-                }
-              }, {
-                set: 'props.rules',
-                get: {
-                  rules: {
-                    // TODO: Fazer validação OR
-                    validations: ['required'], // https://www.npmjs.com/package/validatorjs
-                    message: {
-                      i18n: {
-                        path: 'input.error'
+                },
+                rebind: [{
+                  set: 'props.label',
+                  get: {
+                    i18n: {
+                      path: 'message.login.input.password'
+                    }
+                  }
+                }, {
+                  set: 'props.value',
+                  get: {
+                    store: {
+                      type: 'state',
+                      path: 'global.login.form.password'
+                    }
+                  }
+                }, {
+                  set: 'props.rules',
+                  get: {
+                    rules: {
+                      // TODO: Fazer validação OR
+                      validations: ['required'], // https://www.npmjs.com/package/validatorjs
+                      message: {
+                        i18n: {
+                          path: 'input.error'
+                        }
                       }
                     }
                   }
+                }],
+                events: {
+                  input: [{
+                    store: {
+                      type: 'commit',
+                      path: 'global/changeState',
+                      params: {
+                        state: 'login.form.password',
+                        value: '$action'
+                      }
+                    }
+                  }]
                 }
-              }],
-              events: {
-                input: [{
-                  store: {
-                    type: 'commit',
-                    path: 'global/changeState',
-                    params: {
-                      state: 'login.form.password',
-                      value: '$action'
+              }]
+            }, {
+              type: 'div',
+              properties: {
+                class: 'q-mt-sm'
+              },
+              childrens: [{
+                type: 'a',
+                properties: {
+                  class: 'text-primary',
+                  domProps: {
+                    href: 'https://www.npmjs.com/package/validatorjs',
+                    target: '_blank'
+                  }
+                },
+                rebind: [{
+                  set: 'domProps.innerHTML',
+                  get: {
+                    i18n: {
+                      path: 'message.login.forgot'
                     }
                   }
                 }]
-              }
-            }, {
-              type: 'q-btn',
-              properties: {
-                class: 'no-padding',
-                props: {
-                  'no-caps': true,
-                  color: 'primary',
-                  flat: true
-                }
-              },
-              rebind: [{
-                set: 'props.label',
-                get: {
-                  i18n: {
-                    path: 'message.login.forgot'
-                  }
-                }
               }]
             }, {
               type: 'q-card-section',
@@ -240,9 +275,9 @@ export default {
                 },
                 properties: {
                   props: {
-                    color: 'primary',
-                    rounded: true
-                  }
+                    color: 'primary'
+                  },
+                  class: 'q-pl-lg q-pr-lg'
                 },
                 rebind: [{
                   set: 'props.label',
@@ -314,9 +349,9 @@ export default {
                   }
                 },
                 properties: {
+                  class: 'q-pl-lg q-pr-lg',
                   props: {
-                    color: 'primary',
-                    rounded: true
+                    color: 'primary'
                   }
                 },
                 rebind: [{

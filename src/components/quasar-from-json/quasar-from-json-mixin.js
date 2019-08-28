@@ -5,13 +5,13 @@ import GetterFactory from './getters/GetterFactory'
 
 export default {
   methods: {
-    render () {
-      if (!this.item.render) {
+    render (item) {
+      if (!item.render) {
         return true
       }
 
       let getterFactory = new GetterFactory()
-      return Object.entries(this.item.render)
+      return Object.entries(item.render)
         .map(([type, render]) => {
           let value = getterFactory.create(type)
             .get(render, this)
@@ -43,7 +43,8 @@ export default {
             domProps: this.domProps,
             props: this.props,
             atts: this.attrs,
-            class: this.class
+            class: this.class,
+            style: this.style
           },
           vueInstance: this
         }).baseData
@@ -77,14 +78,16 @@ export default {
       return this.properties.class
     },
 
-    domProps () {
-      return this.properties.domProps
+    style () {
+      return this.properties.style
     },
 
-    validate () {
-      return Array.isArray(this.item.validate)
-        ? this.item.validate
-        : [ this.item.validate ]
+    slot () {
+      return this.properties.slot
+    },
+
+    domProps () {
+      return this.properties.domProps
     }
   }
 }

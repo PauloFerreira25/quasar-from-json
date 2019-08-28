@@ -194,7 +194,7 @@ arrayData.push({
             lastValue: true,
             config: {
               if: {
-                path: 'tipo',
+                path: '$value.tipo',
                 is: 'even'
               },
               then: {

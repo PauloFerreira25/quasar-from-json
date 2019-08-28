@@ -16,11 +16,11 @@ export default Vue.extend({
 
   render (renderFunction) {
     let childrens = this.item.childrens
-      ? this.item.childrens.map(children => renderFunction('QuasarFromJson', { props: { item: children } }))
+      ? this.item.childrens
+        .filter(this.render)
+        .map(children => renderFunction('QuasarFromJson', { props: { item: children } }))
       : this.item.slots || this.$slots.default
 
-    return this.render()
-      ? renderFunction(this.item.type, this.attributesFactory(), childrens)
-      : null
+    return renderFunction(this.item.type, this.attributesFactory(), childrens)
   }
 })

@@ -17,24 +17,37 @@ export default class Conditional {
       return () => null
     }
 
-    return val => {
-      if (typeof this[`__${definition.if.is}`] !== 'function') {
-        console.warn(`${definition.if.is} inválida`)
-        return null
-      }
+    return this.__realTimeEvaluate(definition.if)
+      ? val => this.__evaluate(definition, vueInstance, val)
+      : this.__evaluate(definition, vueInstance, {})
+  }
 
-      let lookfor = this[`__${definition.if.is}`](definition, val)
-        ? 'then'
-        : 'else'
-
-      let tFunc = Object.keys(definition[lookfor])[0]
-      if (typeof this[`__${tFunc}`] !== 'function') {
-        console.warn(`${tFunc} não definida`)
-        return null
-      }
-
-      return this[`__${tFunc}`](definition[lookfor][tFunc], val)
+  __evaluate (definition, vueInstance, val) {
+    console.log({ definition, vueInstance, val })
+    if (typeof this[`__${definition.if.is}`] !== 'function') {
+      console.warn(`${definition.if.is} inválida`)
+      return null
     }
+
+    let lookfor = this[`__${definition.if.is}`](definition, val)
+      ? 'then'
+      : 'else'
+
+    let tFunc = Object.keys(definition[lookfor])[0]
+    if (typeof this[`__${tFunc}`] !== 'function') {
+      console.warn(`${tFunc} não definida`)
+      return null
+    }
+
+    return this[`__${tFunc}`](definition[lookfor][tFunc], val)
+  }
+
+  __realTimeEvaluate (definition) {
+    return definition.path.split('.')[0] !== '$value'
+  }
+
+  __boolean (definition, value) {
+    return !!pathUtils.find(definition.if.path.split('.'), value)
   }
 
   __even (definition, value) {
