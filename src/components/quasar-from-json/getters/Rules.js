@@ -20,18 +20,21 @@ export default class Rules {
       }
     })
 
-    return definition.validations.map(validation =>
+    return [
       val => {
-        if (val && !isNaN(val)) {
-          val = Number(val)
-        }
+        let and = this.__testInput(definition.validations.and.join('|'), val)
+        let or = definition.validations.or
+          ? this.__testInput(definition.validations.or.join('|'), val)
+          : and
 
-        let validator = new Validator({ val }, { val: validation })
         let messageHandler = Object.keys(definition.message)[0] // Pega só o primeiro
-        return validator.passes() || this.getterFactory.create(messageHandler)
+        let msg = this.getterFactory
+          .create(messageHandler)
           .get(definition.message[messageHandler], vueInstance)
+
+        return (and || or) || msg
       }
-    )
+    ]
   }
 
   validateAll () {
@@ -42,5 +45,14 @@ export default class Rules {
       }
       return true
     }).find(f => f)
+  }
+
+  __testInput (validations, input) {
+    if (input && !isNaN(input)) {
+      input = Number(input)
+    }
+
+    let validator = new Validator({ input }, { input: validations })
+    return validator.passes()
   }
 }

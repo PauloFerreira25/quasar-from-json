@@ -152,7 +152,10 @@ export default {
                   get: {
                     rules: {
                       // TODO: Fazer validação OR
-                      validations: ['required', 'min:8', 'email'], // https://www.npmjs.com/package/validatorjs
+                      validations: { // https://www.npmjs.com/package/validatorjs
+                        and: ['required', 'min:8', 'email'],
+                        or: ['required', 'alpha']
+                      },
                       message: {
                         i18n: {
                           path: 'input.error'
@@ -178,6 +181,7 @@ export default {
                 key: 'password-input',
                 ref: 'password-input',
                 properties: {
+                  class: 'no-padding',
                   props: {
                     outlined: true,
                     type: 'password'
@@ -213,7 +217,9 @@ export default {
                   get: {
                     rules: {
                       // TODO: Fazer validação OR
-                      validations: ['required'], // https://www.npmjs.com/package/validatorjs
+                      validations: {
+                        and: ['required']
+                      }, // https://www.npmjs.com/package/validatorjs
                       message: {
                         i18n: {
                           path: 'input.error'
@@ -238,12 +244,13 @@ export default {
             }, {
               type: 'div',
               properties: {
-                class: 'q-mt-sm'
+                class: 'q-mt-md'
               },
               childrens: [{
                 type: 'a',
                 properties: {
                   class: 'text-primary',
+                  style: 'text-decoration: none',
                   domProps: {
                     href: 'https://www.npmjs.com/package/validatorjs',
                     target: '_blank'

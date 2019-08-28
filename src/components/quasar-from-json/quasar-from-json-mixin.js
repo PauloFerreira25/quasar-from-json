@@ -34,7 +34,7 @@ export default {
         decorators.push(Decorators.Event)
       }
 
-      let data = decorators
+      return decorators
         .reduce((DecoratorAnterior, Atual) => new Atual(DecoratorAnterior), new Decorators.Base())
         .mount({
           baseData: {
@@ -44,12 +44,11 @@ export default {
             props: this.props,
             atts: this.attrs,
             class: this.class,
-            style: this.style
+            style: this.style,
+            slot: this.slot
           },
           vueInstance: this
         }).baseData
-
-      return data
     }
   },
 
@@ -83,7 +82,7 @@ export default {
     },
 
     slot () {
-      return this.properties.slot
+      return this.item.slot
     },
 
     domProps () {
