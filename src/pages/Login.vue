@@ -151,10 +151,9 @@ export default {
                   set: 'props.rules',
                   get: {
                     rules: {
-                      // TODO: Fazer validação OR
                       validations: { // https://www.npmjs.com/package/validatorjs
                         and: ['required', 'min:8', 'email'],
-                        or: ['required', 'alpha']
+                        or: ['required', 'alpha_num']
                       },
                       message: {
                         i18n: {
@@ -216,7 +215,6 @@ export default {
                   set: 'props.rules',
                   get: {
                     rules: {
-                      // TODO: Fazer validação OR
                       validations: {
                         and: ['required']
                       }, // https://www.npmjs.com/package/validatorjs
