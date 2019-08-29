@@ -76,7 +76,8 @@ export default {
               render: {
                 store: {
                   type: 'state',
-                  path: 'global.login.step',
+                  path: 'user.login.step',
+                  defaultValue: 'step-account',
                   rules: ['in:step-password'] // https://www.npmjs.com/package/validatorjs
                 }
               },
@@ -84,7 +85,7 @@ export default {
                 set: 'props.label',
                 get: {
                   store: {
-                    path: 'global.login.form.account'
+                    path: 'user.login.form.account'
                   }
                 }
               }],
@@ -92,7 +93,7 @@ export default {
                 click: [{
                   store: {
                     type: 'commit',
-                    path: 'global/changeState',
+                    path: 'user/changeState',
                     params: {
                       state: 'login.step',
                       value: 'step-account'
@@ -128,7 +129,7 @@ export default {
                 render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.step',
+                    path: 'user.login.step',
                     rules: ['in:step-account'] // https://www.npmjs.com/package/validatorjs
                   }
                 },
@@ -144,7 +145,7 @@ export default {
                   get: {
                     store: {
                       type: 'state',
-                      path: 'global.login.form.account'
+                      path: 'user.login.form.account'
                     }
                   }
                 }, {
@@ -167,7 +168,7 @@ export default {
                   input: [{
                     store: {
                       type: 'commit',
-                      path: 'global/changeState',
+                      path: 'user/changeState',
                       params: {
                         state: 'login.form.account',
                         value: '$action'
@@ -199,7 +200,7 @@ export default {
                 render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.step',
+                    path: 'user.login.step',
                     rules: ['in:step-password'] // https://www.npmjs.com/package/validatorjs
                   }
                 },
@@ -215,7 +216,7 @@ export default {
                   get: {
                     store: {
                       type: 'state',
-                      path: 'global.login.form.password'
+                      path: 'user.login.form.password'
                     }
                   }
                 }, {
@@ -237,7 +238,7 @@ export default {
                   input: [{
                     store: {
                       type: 'commit',
-                      path: 'global/changeState',
+                      path: 'user/changeState',
                       params: {
                         state: 'login.form.password',
                         value: '$action'
@@ -289,7 +290,7 @@ export default {
                 render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.step',
+                    path: 'user.login.step',
                     rules: ['in:step-account'] // https://www.npmjs.com/package/validatorjs
                   }
                 },
@@ -310,7 +311,8 @@ export default {
                   set: 'props.loading',
                   get: {
                     store: {
-                      path: 'global.login.loading'
+                      path: 'user.login.loading',
+                      defaultValue: false
                     }
                   }
                 }],
@@ -320,7 +322,7 @@ export default {
                       type: 'store',
                       config: {
                         type: 'commit',
-                        path: 'global/changeState',
+                        path: 'user/changeState',
                         params: {
                           state: 'login.loading',
                           value: true
@@ -332,13 +334,13 @@ export default {
                       type: 'store',
                       config: {
                         type: 'dispatch',
-                        path: 'global/simulateLogin'
+                        path: 'user/callBackend'
                       }
                     }, {
                       type: 'store',
                       config: {
                         type: 'commit',
-                        path: 'global/changeState',
+                        path: 'user/changeState',
                         params: {
                           state: 'login.step',
                           value: 'step-password'
@@ -349,7 +351,7 @@ export default {
                       execOnError: true,
                       config: {
                         type: 'commit',
-                        path: 'global/changeState',
+                        path: 'user/changeState',
                         params: {
                           state: 'login.loading',
                           value: false
@@ -365,7 +367,7 @@ export default {
                 render: {
                   store: {
                     type: 'state',
-                    path: 'global.login.step',
+                    path: 'user.login.step',
                     rules: ['in:step-password'] // https://www.npmjs.com/package/validatorjs
                   }
                 },
@@ -386,7 +388,7 @@ export default {
                   set: 'props.loading',
                   get: {
                     store: {
-                      path: 'global.login.loading'
+                      path: 'user.login.loading'
                     }
                   }
                 }],
@@ -396,7 +398,7 @@ export default {
                       type: 'store',
                       config: {
                         type: 'commit',
-                        path: 'global/changeState',
+                        path: 'user/changeState',
                         params: {
                           state: 'login.loading',
                           value: true
@@ -411,7 +413,37 @@ export default {
                       type: 'store',
                       config: {
                         type: 'dispatch',
-                        path: 'global/simulateLogin'
+                        path: 'user/callBackend'
+                      }
+                    }, {
+                      type: 'store',
+                      config: {
+                        type: 'commit',
+                        path: 'user/changeState',
+                        params: {
+                          state: 'login.form.account',
+                          value: ''
+                        }
+                      }
+                    }, {
+                      type: 'store',
+                      config: {
+                        type: 'commit',
+                        path: 'user/changeState',
+                        params: {
+                          state: 'login.form.password',
+                          value: ''
+                        }
+                      }
+                    }, {
+                      type: 'store',
+                      config: {
+                        type: 'commit',
+                        path: 'user/changeState',
+                        params: {
+                          state: 'login.step',
+                          value: 'step-account'
+                        }
                       }
                     }, {
                       type: 'router',
@@ -423,7 +455,7 @@ export default {
                       execOnError: true,
                       config: {
                         type: 'commit',
-                        path: 'global/changeState',
+                        path: 'user/changeState',
                         params: {
                           state: 'login.loading',
                           value: false

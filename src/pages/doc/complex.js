@@ -34,7 +34,7 @@ arrayData.push({
       render: {
         store: {
           type: 'state',
-          path: 'page.tipo',
+          path: 'doc.complex.tipo',
           rules: ['required'] // https://www.npmjs.com/package/validatorjs
         }
       },
@@ -44,7 +44,7 @@ arrayData.push({
           i18n: {
             path: {
               store: {
-                path: 'user.tipo'
+                path: 'doc.complex.tipo'
               }
             }
           }
@@ -56,7 +56,7 @@ arrayData.push({
             type: 'commit',
             path: 'doc/changeState',
             params: {
-              state: 'qInput',
+              state: 'complex.qInput',
               value: '$action'
             }
           }
@@ -84,15 +84,17 @@ arrayData.push({
         set: 'props.value',
         get: {
           store: {
-            type: 'state',
-            path: 'user.valorEntrada'
+            path: 'doc.complex.valorEntrada'
           }
         }
       }, {
         set: 'props.rules',
         get: {
           rules: {
-            validations: ['required'], // https://www.npmjs.com/package/validatorjs
+            // https://www.npmjs.com/package/validatorjs
+            validations: {
+              and: ['required']
+            },
             message: {
               i18n: {
                 path: 'input.error'
@@ -105,9 +107,9 @@ arrayData.push({
         input: [{
           store: {
             type: 'commit',
-            path: 'user/changeState',
+            path: 'doc/changeState',
             params: {
-              state: 'valorEntrada',
+              state: 'complex.valorEntrada',
               value: '$action'
             }
           }
@@ -135,15 +137,17 @@ arrayData.push({
         set: 'props.value',
         get: {
           store: {
-            type: 'state',
-            path: 'user.teste'
+            path: 'doc.complex.teste'
           }
         }
       }, {
         set: 'props.rules',
         get: {
           rules: {
-            validations: ['required', 'min:1'], // https://www.npmjs.com/package/validatorjs
+            // https://www.npmjs.com/package/validatorjs
+            validations: {
+              and: ['required', 'min:1']
+            },
             message: {
               i18n: {
                 path: 'input.error'
@@ -156,9 +160,9 @@ arrayData.push({
         input: [{
           store: {
             type: 'commit',
-            path: 'user/changeState',
+            path: 'doc/changeState',
             params: {
-              state: 'teste',
+              state: 'complex.teste',
               value: '$action'
             }
           }
@@ -187,7 +191,7 @@ arrayData.push({
             type: 'store',
             config: {
               type: 'dispatch',
-              path: 'user/callBackend'
+              path: 'doc/callBackend'
             }
           }, {
             type: 'conditional',
@@ -209,9 +213,9 @@ arrayData.push({
             lastValue: true,
             config: {
               type: 'commit',
-              path: 'user/changeState',
+              path: 'doc/changeState',
               params: {
-                state: 'tipo',
+                state: 'complex.tipo',
                 value: '$action'
               }
             }

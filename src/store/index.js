@@ -2,9 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import example from './module-example'
-import page from './page'
-import doc from './doc'
-import user from './user'
 import global from './global'
 
 Vue.use(Vuex)
@@ -17,9 +14,6 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      page,
-      doc,
-      user,
       global
     },
 

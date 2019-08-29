@@ -1,7 +1,11 @@
+import Vue from 'vue'
+
 import pathUtils from '../utils/path'
 
 export default class Store {
   get (definition, vueInstance) {
+    this.__checkStoreState(definition, vueInstance)
+
     return !definition.type || definition.type === 'state'
       ? this.__state(definition, vueInstance)
       : val => {
@@ -19,7 +23,23 @@ export default class Store {
   }
 
   __state (definition, vueInstance) {
-    return pathUtils.find(definition.path.split('.'), vueInstance.$store.state)
+    let path = JSON.parse(JSON.stringify(definition.path.split('.')))
+    let found = pathUtils.find(path, vueInstance.$store.state)
+
+    if (found instanceof Error) {
+      let state = JSON.parse(JSON.stringify(definition.path.split('.')))
+
+      this.__callFunction(vueInstance, 'commit', `${state.shift()}/changeState`, {
+        state: state.join('.'),
+        value: typeof definition.defaultValue !== 'undefined'
+          ? definition.defaultValue
+          : ''
+      })
+
+      found = this.__state(definition, vueInstance)
+    }
+
+    return found
   }
 
   __mountConfig (params, val) {
@@ -39,5 +59,49 @@ export default class Store {
     }
 
     return config
+  }
+
+  // Registrando módulos da store dinamicamente
+  __checkStoreState (definition, vueInstance) {
+    let state = definition.path.split('.').length > 1
+      ? definition.path.split('.')[0]
+      : definition.path.split('/')[0]
+
+    if (vueInstance.$store.state[state]) {
+      return
+    }
+
+    vueInstance.$store.registerModule(state, {
+      // Default vuex module
+      namespaced: true,
+      state: {},
+
+      actions: {
+        callBackend: () => new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(true)
+          }, 1000)
+        })
+      },
+
+      mutations: {
+        changeState: (state, data) => {
+          let path = data.state.split('.')
+          let pathSize = path.length
+          if (pathSize > 1) {
+            pathUtils.findAndSet(path, state, data.value, (obj, key, size) => {
+              let val = size === 0
+                ? data.value
+                : {}
+
+              Vue.set(obj, key, val)
+              return obj
+            })
+          } else {
+            Vue.set(state, data.state, data.value)
+          }
+        }
+      }
+    })
   }
 }

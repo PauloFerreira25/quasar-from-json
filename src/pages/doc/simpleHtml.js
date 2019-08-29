@@ -39,7 +39,10 @@ arrayData.push({
       set: 'domProps.innerHTML',
       get: {
         store: {
-          path: 'doc.text'
+          path: 'doc.text',
+          // Precisa disso porque o módulo é montado em tempo de execução
+          // Se não valor seria vazio
+          defaultValue: 'Texto da store'
         }
       }
     }]
