@@ -17,8 +17,10 @@ export default class Conditional {
       return () => null
     }
 
-    return this.__realTimeEvaluate(definition.if)
-      ? val => this.__evaluate(definition, vueInstance, val)
+    let result = this.__realTimeEvaluate(definition)
+
+    return result.isRealTime
+      ? val => this.__evaluate(result.definition, vueInstance, val)
       : this.__evaluate(definition, vueInstance, {})
   }
 
@@ -29,7 +31,12 @@ export default class Conditional {
       return null
     }
 
-    let lookfor = this[`__${definition.if.is}`](definition, val)
+    let eval = this[`__${definition.if.is}`](definition, val)
+    if (eval === null) {
+      return eval
+    }
+
+    let lookfor = eval
       ? 'then'
       : 'else'
 
@@ -43,15 +50,37 @@ export default class Conditional {
   }
 
   __realTimeEvaluate (definition) {
-    return definition.path.split('.')[0] !== '$value'
+    let path = definition.if.path.split('.')
+    let result = path[0] === '$value'
+
+    if (result) {
+      path.shift()
+      definition.if.path = path.join('.')
+    }
+
+    return {
+      isRealTime: result,
+      definition
+    }
   }
 
   __boolean (definition, value) {
-    return !!pathUtils.find(definition.if.path.split('.'), value)
+    let val = pathUtils.find(definition.if.path.split('.'), value)
+    if (val instanceof Error) {
+      console.warn(`Path ${definition.if.path} not found in ${value}`)
+      return null
+    }
+
+    return !!val
   }
 
   __even (definition, value) {
     let val = pathUtils.find(definition.if.path.split('.'), value)
+    if (val instanceof Error) {
+      console.warn(`Path ${definition.if.path} not found in ${value}`)
+      return null
+    }
+
     return !isNaN(val) && val % 2 === 0
   }
 
