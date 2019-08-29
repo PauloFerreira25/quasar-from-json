@@ -11,7 +11,12 @@ export default class Cascade {
     }
 
     return () => definition.reduce(async (anterior, atual) => {
-      let result = await anterior
+      let result = null
+      try {
+        result = await anterior  
+      } catch (error) {
+        console.warn(`Ação do cascade jogou exception ${error}`)
+      }      
 
       if (result === null && !atual.execOnError) {
         return result
