@@ -31,12 +31,12 @@ export default class Conditional {
       return null
     }
 
-    let eval = this[`__${definition.if.is}`](definition, val)
-    if (eval === null) {
-      return eval
+    let evaluated = this[`__${definition.if.is}`](definition, val)
+    if (evaluated === null) {
+      return evaluated
     }
 
-    let lookfor = eval
+    let lookfor = evaluated
       ? 'then'
       : 'else'
 
