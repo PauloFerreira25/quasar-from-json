@@ -403,8 +403,10 @@ export default {
                         }
                       }
                     }, {
-                      type: 'validate'
-                      // TODO: Selecionar o que vai validar
+                      type: 'validate',
+                      config: {
+                        refs: [ 'password-input' ]
+                      }
                     }, {
                       type: 'store',
                       config: {

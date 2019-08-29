@@ -8,7 +8,7 @@ export default class Validate {
   get (definition, vueInstance) {
     let result = this.getterFactory
       .create('Rules')
-      .validateAll() // Específico do rules
+      .validate((definition || {}).refs) // Específico do rules
     return result || null
   }
 }

@@ -44,8 +44,17 @@ export default class Rules {
     ]
   }
 
-  validateAll () {
-    return !this.components.map(c => {
+  validate (refs) {
+    let toBeValidated = []
+    if (refs) {
+      toBeValidated = this.components.filter(
+        ref => refs.find(r => r === ref.$vnode.data.ref)
+      )
+    } else {
+      toBeValidated = this.components
+    }
+
+    return !toBeValidated.map(c => {
       if (typeof c.validate === 'function') {
         c.validate()
       }
