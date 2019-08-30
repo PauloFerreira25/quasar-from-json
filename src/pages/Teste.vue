@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 import QuasarFromJson from '../components/quasar-from-json/quasar-from-json'
 
 export default {
@@ -17,24 +15,24 @@ export default {
   components: {
     QuasarFromJson
   },
+  data () {
+    return {
+      currentPage: null,
+      page: null
+    }
+  },
   computed: {
-    ...mapGetters({
-      currentPage: 'page/getPageItem'
-    }),
     drawPage () {
       return this.currentPage
     }
   },
-  data () {
-    return {
-      page: null
-    }
-  },
   watch: {
-    '$route.params.page': {
+    '$route.params.pathMatch': {
       immediate: true,
       async handler (val) {
-        this.$store.dispatch('page/fetchPage', val)
+        console.log(val)
+        let response = await this.$axios.get(`http://localhost:3000/dynamicPage/byName?path=/${val}`)
+        this.currentPage = response.data.data.data
       }
     }
   }
