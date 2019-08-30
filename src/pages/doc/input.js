@@ -71,7 +71,7 @@ arrayData.push({
           path: 'doc/changeState',
           params: {
             state: 'qInput',
-            value: '$action'
+            value: '$value'
           }
         }
       }]

@@ -25,7 +25,6 @@ export default class Conditional {
   }
 
   __evaluate (definition, vueInstance, val) {
-    console.log({ definition, vueInstance, val })
     if (typeof this[`__${definition.if.is}`] !== 'function') {
       console.warn(`${definition.if.is} inválida`)
       return null
@@ -50,38 +49,64 @@ export default class Conditional {
   }
 
   __realTimeEvaluate (definition) {
-    let path = definition.if.path.split('.')
+    let definitionClone = JSON.parse(JSON.stringify(definition))
+
+    let path = definitionClone.if.path.split('.')
     let result = path[0] === '$value'
 
     if (result) {
       path.shift()
-      definition.if.path = path.join('.')
+      definitionClone.if.path = path.join('.')
     }
 
     return {
       isRealTime: result,
-      definition
+      definition: definitionClone
     }
+  }
+
+  __findPath (path, value) {
+    if (!path) {
+      return value
+    }
+
+    let val = pathUtils.find(path.split('.'), value)
+
+    if (val instanceof Error) {
+      throw new Error(`Path ${path} not found in ${value}`)
+    }
+
+    return val
   }
 
   __boolean (definition, value) {
-    let val = pathUtils.find(definition.if.path.split('.'), value)
-    if (val instanceof Error) {
-      console.warn(`Path ${definition.if.path} not found in ${value}`)
+    try {
+      let val = this.__findPath(definition.if.path, value)
+      return !!val
+    } catch (err) {
+      console.warn(err)
       return null
     }
-
-    return !!val
   }
 
   __even (definition, value) {
-    let val = pathUtils.find(definition.if.path.split('.'), value)
-    if (val instanceof Error) {
-      console.warn(`Path ${definition.if.path} not found in ${value}`)
+    try {
+      let val = this.__findPath(definition.if.path, value)
+      return !isNaN(val) && val % 2 === 0
+    } catch (err) {
+      console.warn(err)
       return null
     }
+  }
 
-    return !isNaN(val) && val % 2 === 0
+  __eq (definition, value) {
+    try {
+      let val = this.__findPath(definition.if.path, value)
+      return val === definition.if.to
+    } catch (err) {
+      console.warn(err)
+      return null
+    }
   }
 
   __$return (toBeReturned) {

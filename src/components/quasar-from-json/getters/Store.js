@@ -50,7 +50,7 @@ export default class Store {
       config = params
     } else {
       config = Object.keys(params).reduce((config, key) => {
-        config[key] = params[key] !== '$action'
+        config[key] = params[key] !== '$value'
           ? params[key]
           : val
 

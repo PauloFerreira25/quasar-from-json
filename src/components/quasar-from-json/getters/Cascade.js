@@ -9,8 +9,11 @@ export default class Cascade {
     if (!definition) {
       return
     }
+    return () => this.__cascade(definition, vueInstance)
+  }
 
-    return () => definition.reduce(async (anterior, atual) => {
+  __cascade (actions, vueInstance) {
+    return actions.reduce(async (anterior, atual) => {
       let result = null
       try {
         result = await anterior

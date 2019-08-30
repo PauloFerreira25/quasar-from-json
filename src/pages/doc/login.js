@@ -157,7 +157,7 @@ export default {
                 path: 'user/changeState',
                 params: {
                   state: 'login.form.account',
-                  value: '$action'
+                  value: '$value'
                 }
               }
             }],
@@ -176,12 +176,63 @@ export default {
           properties: {
             class: 'no-padding',
             props: {
-              outlined: true,
-              type: 'password'
+              outlined: true
             },
             attrs: {
               id: 'password-input'
             }
+          },
+          slots: {
+            append: [{
+              type: 'q-icon',
+              ref: 'password-icon',
+              rebind: [{
+                set: 'props.name',
+                get: {
+                  store: {
+                    path: 'user.login.isPwd',
+                    defaultValue: 'visibility_off'
+                  }
+                }
+              }],
+              events: {
+                click: [{
+                  cascade: [{
+                    type: 'store',
+                    config: {
+                      path: 'user.login.isPwd'
+                    }
+                  }, {
+                    type: 'conditional',
+                    lastValue: true,
+                    config: {
+                      if: {
+                        path: '$value',
+                        is: 'eq',
+                        to: 'visibility_off'
+                      },
+                      then: {
+                        $return: 'visibility'
+                      },
+                      else: {
+                        $return: 'visibility_off'
+                      }
+                    }
+                  }, {
+                    type: 'store',
+                    lastValue: true,
+                    config: {
+                      type: 'commit',
+                      path: 'user/changeState',
+                      params: {
+                        state: 'login.isPwd',
+                        value: '$value'
+                      }
+                    }
+                  }]
+                }]
+              }
+            }]
           },
           render: {
             store: {
@@ -198,10 +249,36 @@ export default {
               }
             }
           }, {
+            set: 'props.type',
+            get: {
+              cascadeImediate: [{
+                type: 'store',
+                config: {
+                  path: 'user.login.isPwd',
+                  defaultValue: 'visibility_off'
+                }
+              }, {
+                type: 'conditional',
+                lastValue: true,
+                config: {
+                  if: {
+                    path: '$value',
+                    is: 'eq',
+                    to: 'visibility_off'
+                  },
+                  then: {
+                    $return: 'password'
+                  },
+                  else: {
+                    $return: 'text'
+                  }
+                }
+              }]
+            }
+          }, {
             set: 'props.value',
             get: {
               store: {
-                type: 'state',
                 path: 'user.login.form.password'
               }
             }
@@ -227,7 +304,7 @@ export default {
                 path: 'user/changeState',
                 params: {
                   state: 'login.form.password',
-                  value: '$action'
+                  value: '$value'
                 }
               }
             }],

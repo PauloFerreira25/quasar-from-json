@@ -57,7 +57,7 @@ arrayData.push({
             path: 'doc/changeState',
             params: {
               state: 'complex.qInput',
-              value: '$action'
+              value: '$value'
             }
           }
         }]
@@ -110,7 +110,7 @@ arrayData.push({
             path: 'doc/changeState',
             params: {
               state: 'complex.valorEntrada',
-              value: '$action'
+              value: '$value'
             }
           }
         }]
@@ -163,7 +163,7 @@ arrayData.push({
             path: 'doc/changeState',
             params: {
               state: 'complex.teste',
-              value: '$action'
+              value: '$value'
             }
           }
         }]
@@ -216,7 +216,7 @@ arrayData.push({
               path: 'doc/changeState',
               params: {
                 state: 'complex.tipo',
-                value: '$action'
+                value: '$value'
               }
             }
           }]
