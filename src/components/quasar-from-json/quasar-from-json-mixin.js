@@ -20,7 +20,14 @@ export default {
         .find(f => !!f)
     },
 
-    attributesFactory () {
+    createScopedSlots (renderFunction) {
+      return Object.keys(this.slots || {}).reduce((slots, key) => {
+        slots[key] = () => this.slots[key].map(child => renderFunction('QuasarFromJson', { props: { item: child } }))
+        return slots
+      }, {})
+    },
+
+    attributesFactory (renderFunction) {
       let decorators = []
       if (Array.isArray(this.item.set) && this.item.set.length > 0) {
         decorators.push(Decorators.Setter)
@@ -45,7 +52,8 @@ export default {
             atts: this.attrs,
             class: this.class,
             style: this.style,
-            slot: this.slot
+            slot: this.slot,
+            scopedSlots: this.createScopedSlots(renderFunction)
           },
           vueInstance: this
         }).baseData
@@ -83,6 +91,10 @@ export default {
 
     slot () {
       return this.item.slot
+    },
+
+    slots () {
+      return this.item.slots
     },
 
     domProps () {

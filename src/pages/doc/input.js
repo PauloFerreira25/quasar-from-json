@@ -79,4 +79,30 @@ arrayData.push({
   }
 })
 
+arrayData.push({
+  _description: 'Input with slot append',
+  data: {
+    type: 'q-input',
+    key: 'slot',
+    properties: {
+      class: 'q-ma-md',
+      props: {
+        outlined: true,
+        dense: true,
+        label: 'input'
+      }
+    },
+    // Mesma sintaxe de um children, só alocado em uma outra variavel
+    slots: {
+      append: [{
+        type: 'q-icon',
+        properties: {
+          props: {
+            name: '3d_rotation'
+          }
+        }
+      }]
+    }
+  }
+})
 export default arrayData
