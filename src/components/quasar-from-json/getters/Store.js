@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 
 import pathUtils from '../utils/path'
 
@@ -64,9 +65,12 @@ export default class Store {
   // Registrando módulos da store dinamicamente
   __checkStoreState (definition, vueInstance) {
     let state = definition.path.split('.').length > 1
+      // state vem delimitado por ponto
       ? definition.path.split('.')[0]
+      // actions vem delimitado por barra
       : definition.path.split('/')[0]
 
+    // Módulo já existe
     if (vueInstance.$store.state[state]) {
       return
     }
@@ -77,11 +81,14 @@ export default class Store {
       state: {},
 
       actions: {
-        callBackend: () => new Promise((resolve, reject) => {
-          setTimeout(() => {
-            resolve(true)
-          }, 1000)
-        })
+        callBackend: async (context, params) => {
+          try {
+            let response = await axios(params)
+            return response.data
+          } catch (err) {
+            throw err
+          }
+        }
       },
 
       mutations: {

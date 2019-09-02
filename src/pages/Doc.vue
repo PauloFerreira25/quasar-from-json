@@ -28,9 +28,6 @@ export default {
     return {
       elements: docs
     }
-  },
-  mounted () {
-    console.log(this)
   }
 }
 </script>

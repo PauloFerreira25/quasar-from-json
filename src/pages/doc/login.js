@@ -397,7 +397,7 @@ export default {
                 type: 'store',
                 config: {
                   type: 'dispatch',
-                  path: 'user/callBackend'
+                  path: 'global/simulateLogin'
                 }
               }, {
                 type: 'store',
@@ -476,7 +476,7 @@ export default {
                 type: 'store',
                 config: {
                   type: 'dispatch',
-                  path: 'user/callBackend'
+                  path: 'global/simulateLogin'
                 }
               }, {
                 type: 'store',

@@ -20,7 +20,7 @@ export default {
         .find(f => !!f)
     },
 
-    createScopedSlots (renderFunction) {
+    scopedSlots (renderFunction) {
       return Object.keys(this.slots || {}).reduce((slots, key) => {
         slots[key] = () => this.slots[key].map(child => renderFunction('QuasarFromJson', { props: { item: child } }))
         return slots
@@ -53,7 +53,7 @@ export default {
             class: this.class,
             style: this.style,
             slot: this.slot,
-            scopedSlots: this.createScopedSlots(renderFunction)
+            scopedSlots: this.scopedSlots(renderFunction)
           },
           vueInstance: this
         }).baseData
