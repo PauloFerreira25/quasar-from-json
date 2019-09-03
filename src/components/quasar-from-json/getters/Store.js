@@ -51,9 +51,12 @@ export default class Store {
       config = params
     } else {
       config = Object.keys(params).reduce((config, key) => {
-        config[key] = params[key] !== '$value'
-          ? params[key]
-          : val
+        if (String(params[key]).includes('$value')) {
+          config.originalPath = params[key]
+          config[key] = val
+        } else {
+          config[key] = params[key]
+        }
 
         return config
       }, {})
@@ -94,9 +97,22 @@ export default class Store {
       mutations: {
         changeState: (state, data) => {
           let path = data.state.split('.')
+          let toBeSet = null
+
+          if (data.originalPath) {
+            let originalPath = JSON.parse(JSON.stringify(data.originalPath)).split('.')
+            originalPath.shift()
+
+            toBeSet = originalPath.length > 0
+              ? pathUtils.find(originalPath, data.value)
+              : data.value
+          } else {
+            toBeSet = data.value
+          }
+
           let pathSize = path.length
           if (pathSize > 1) {
-            pathUtils.findAndSet(path, state, data.value, (obj, key, size) => {
+            pathUtils.findAndSet(path, state, toBeSet, (obj, key, size) => {
               let val = size === 0
                 ? data.value
                 : {}
@@ -105,7 +121,7 @@ export default class Store {
               return obj
             })
           } else {
-            Vue.set(state, data.state, data.value)
+            Vue.set(state, data.state, toBeSet)
           }
         }
       }

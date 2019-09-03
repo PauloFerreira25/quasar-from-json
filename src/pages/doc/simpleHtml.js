@@ -13,6 +13,22 @@ arrayData.push({
   }
 })
 arrayData.push({
+  _description: 'Div com texto raw',
+  data: {
+    type: 'div',
+    key: 'test-key',
+    ref: 'test-ref',
+    rebind: [{
+      set: 'domProps.innerHTML',
+      get: {
+        raw: {
+          path: 'app.name'
+        }
+      }
+    }]
+  }
+})
+arrayData.push({
   _description: 'Div com texto do i18n',
   data: {
     type: 'div',

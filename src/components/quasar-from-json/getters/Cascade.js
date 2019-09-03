@@ -9,11 +9,11 @@ export default class Cascade {
     if (!definition) {
       return
     }
-    return () => this.__cascade(definition, vueInstance)
+    return val => this.__cascade(definition, vueInstance, val)
   }
 
-  __cascade (actions, vueInstance) {
-    return actions.reduce(async (anterior, atual) => {
+  __cascade (actions, vueInstance, val) {
+    return actions.reduce(async (anterior, atual, index) => {
       let result = null
       try {
         result = await anterior
@@ -31,7 +31,11 @@ export default class Cascade {
 
       return typeof getter === 'function'
         ? atual.lastValue
-          ? getter(result)
+          ? getter(
+            index === 0
+              ? val
+              : result
+          )
           : getter()
         : getter
     }, () => true)

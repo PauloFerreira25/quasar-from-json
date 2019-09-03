@@ -4,16 +4,20 @@ import Decorators from './decorators'
 import GetterFactory from './getters/GetterFactory'
 
 export default {
+  data () {
+    return {
+      getterFactory: new GetterFactory()
+    }
+  },
   methods: {
     render (item) {
       if (!item.render) {
         return true
       }
 
-      let getterFactory = new GetterFactory()
       return Object.entries(item.render)
         .map(([type, render]) => {
-          let value = getterFactory.create(type)
+          let value = this.getterFactory.create(type)
             .get(render, this)
           return new Validator({ value }, { value: render.rules.join('|') }).passes()
         })
@@ -100,5 +104,16 @@ export default {
     domProps () {
       return this.properties.domProps
     }
+  },
+
+  created () {
+    console.log(this.item.beforeRender)
+    Object.entries(this.item.beforeRender || {}).map(([type, render]) => {
+      let result = this.getterFactory.create(type)
+        .get(render, this)
+      if (typeof result === 'function') {
+        result()
+      }
+    })
   }
 }

@@ -3,6 +3,7 @@ import inputs from './input'
 import brake from './brake'
 import complex from './complex'
 import http from './http'
+import stepper from './stepper'
 
 export default [].concat(
   simpleHtml,
@@ -10,5 +11,6 @@ export default [].concat(
   inputs,
   brake,
   complex,
-  http
+  http,
+  stepper
 )
