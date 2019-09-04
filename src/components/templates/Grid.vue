@@ -1,7 +1,7 @@
 <template>
   <q-table
     :title="title"
-    :data="data"
+    :data="tableData"
     :columns="cols"
     :row-key="rowKey"
   >
@@ -49,6 +49,20 @@ export default {
     from: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      tableData: []
+    }
+  },
+  watch: {
+    data: {
+      deep: true,
+      immediate: true,
+      handler (val) {
+        this.tableData = val
+      }
     }
   },
   methods: {

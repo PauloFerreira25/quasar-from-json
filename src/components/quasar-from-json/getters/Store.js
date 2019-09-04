@@ -111,7 +111,18 @@ export default class Store {
           }
 
           let pathSize = path.length
+          // FIXME: melhorar interação com arrays
           if (pathSize > 1) {
+            if (data.merge) {
+              let found = pathUtils.find(path, state)
+              if (Array.isArray(found)) {
+                found.push(JSON.parse(JSON.stringify(toBeSet)))
+              } else {
+                found = { ...found, ...toBeSet }
+              }
+              return
+            }
+
             pathUtils.findAndSet(path, state, toBeSet, (obj, key, size) => {
               let val = size === 0
                 ? data.value
@@ -121,6 +132,14 @@ export default class Store {
               return obj
             })
           } else {
+            if (data.merge) {
+              if (Array.isArray(state[data.state])) {
+                return state[data.state].push(JSON.parse(JSON.stringify(toBeSet)))
+              } else {
+                toBeSet = { ...state[data.state], ...toBeSet }
+              }
+            }
+
             Vue.set(state, data.state, toBeSet)
           }
         }
