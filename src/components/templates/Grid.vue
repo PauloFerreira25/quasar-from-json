@@ -13,7 +13,7 @@
           :props="props"
         >
           {{ props.row[col.field] }}
-          <q-popup-edit v-model="props.row[col.field]">
+          <q-popup-edit :value="props.row[col.field]" @save="() => void 0" @cancel="() => void 0">
             <slot :grid="{ index: props.row.__index, field: col.field, from }" :name="col.field"></slot>
           </q-popup-edit>
         </q-td>
