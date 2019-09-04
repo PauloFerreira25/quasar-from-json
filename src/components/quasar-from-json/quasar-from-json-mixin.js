@@ -26,7 +26,7 @@ export default {
 
     scopedSlots (renderFunction) {
       return Object.keys(this.slots || {}).reduce((slots, key) => {
-        slots[key] = () => this.slots[key].map(child => renderFunction('QuasarFromJson', { props: { item: child } }))
+        slots[key] = (props) => this.slots[key].map(child => renderFunction('QuasarFromJson', { props: { item: { ...child, ...props } } }))
         return slots
       }, {})
     },
@@ -43,6 +43,10 @@ export default {
 
       if (this.item.events) {
         decorators.push(Decorators.Event)
+      }
+
+      if (this.item.grid) {
+        decorators.push(Decorators.Grid)
       }
 
       return decorators
@@ -107,7 +111,6 @@ export default {
   },
 
   created () {
-    console.log(this.item.beforeRender)
     Object.entries(this.item.beforeRender || {}).map(([type, render]) => {
       let result = this.getterFactory.create(type)
         .get(render, this)

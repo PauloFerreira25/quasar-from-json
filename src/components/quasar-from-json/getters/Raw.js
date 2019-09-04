@@ -1,7 +1,7 @@
 import pathUtils from '../utils/path'
 
 export default class Raw {
-  get (definition, val) {
+  get (definition) {
     if (String(definition.path).includes('$value')) {
       return val => {
         let path = definition.path.split('.')
