@@ -11,11 +11,13 @@
           v-for="col in cols"
           :key="col.field"
           :props="props"
+          style="min-width: 200px"
         >
-          {{ props.row[col.field] }}
-          <q-popup-edit :value="props.row[col.field]" @save="() => void 0" @cancel="() => void 0">
-            <slot :grid="{ index: props.row.__index, field: col.field, from }" :name="col.field"></slot>
-          </q-popup-edit>
+          <slot
+            :grid="{ index: props.row.__index, field: col.field, from }"
+            :name="col.field"
+          >
+          </slot>
         </q-td>
       </q-tr>
     </template>
@@ -47,6 +49,12 @@ export default {
     from: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    tab (val) {
+      // TODO: implementar action que vá para o próximo q-poopup-edit
+      console.log({ val })
     }
   }
 }

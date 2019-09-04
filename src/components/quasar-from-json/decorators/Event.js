@@ -34,11 +34,9 @@ export default class Event extends Base {
       if (typeof config.key !== 'undefined') {
         // Abort if the element emitting the event is not
         // the element the event is bound to
-        if (event.target !== event.currentTarget) return
-        // Abort if the key that went up is not the enter
-        // key (13) and the shift key was not held down
+        // if (event.target !== event.currentTarget) return
         // at the same time
-        if (Number(event.keyCode) !== Number(this.__getKeyCode(config.key))) return
+        if (event.key !== config.key) return
         // Stop event propagation
         event.stopPropagation()
         // Prevent the default keyup handler for this element
