@@ -806,12 +806,15 @@ export default {
   },
 
   watch: {
-    temp (val) {
-      if (val.pesoLiquidoUnitario && val.quantidade) {
-        val.pesoLiquidoTotal = val.pesoLiquidoUnitario * val.quantidade
+    'temp.pesoLiquidoUnitario' (val) {
+      if (val && this.temp.quantidade) {
+        this.temp.pesoLiquidoTotal = val * this.temp.quantidade
       }
-
-      if ()
+    },
+    'temp.quantidade' (val) {
+      if (val && this.this.temp.pesoLiquidoTotal) {
+        this.temp.pesoLiquidoTotal = val * this.temp.pesoLiquidoTotal
+      }
     }
   },
 
