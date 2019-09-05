@@ -52,16 +52,24 @@ module.exports = function (ctx) {
         'QChip',
         'QInput',
         'QStepper',
+        'QStepperNavigation',
         'QStep',
         'QSelect',
         'QTable',
         'QTr',
         'QTd',
-        'QPopupEdit'
+        'QPopupEdit',
+        'QPopupProxy',
+        'QTime',
+        'QDate',
+        'QOptionGroup',
+        'QDialog',
+        'QCardActions'
       ],
 
       directives: [
-        'Ripple'
+        'Ripple',
+        'ClosePopup'
       ],
 
       // Quasar plugins
