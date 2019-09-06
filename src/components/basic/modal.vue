@@ -7,14 +7,14 @@
         </div>
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section style="max-height: 50vh" class="scroll">
         <slot name="body">
         </slot>
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" @click="close" />
-        <q-btn color="primary" label="Add" @click="add" />
+        <q-btn color="primary" :label="isEdit ? 'Update' : 'Add'" @click="add" />
       </q-card-actions>
     </q-card>
   </q-dialog>

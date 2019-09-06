@@ -25,15 +25,17 @@
                 outlined
                 v-model="model.refPedido"
                 :label="$t('pedido.refPedido')"
+                :rules="[]"
                 class="col"
                 style="border-color: 2px black"
               />
 
               <q-input
                 outlined
+                class="col"
                 v-model="model.pedidoCliente"
                 :label="$t('pedido.pedidoCliente')"
-                class="col"
+                :rules="[val => !!val || $t('pedido.error.pedidoCliente')]"
               />
             </div>
 
@@ -309,7 +311,23 @@
             icon="list"
             :done="step > 3"
           >
-            controlTower
+            <div class="row q-gutter-md q-mt-sm">
+              <q-toolbar class="text-grey">
+                <q-toolbar-title>
+                  Control Tower
+                </q-toolbar-title>
+                <q-btn flat round dense color="primary" icon="add" @click="$refs.controlTower.open()" />
+              </q-toolbar>
+
+              <basic-grid
+                class="fit"
+                :itens="model.controlTower"
+                :cols="controlTowerCols"
+                @edit="(index) => edit($refs.modalcontrolTower, model.controlTower, '__index', index)"
+                @delete="(index) => del(model.controlTower, '__index', index)"
+              >
+              </basic-grid>
+            </div>
           </q-step>
 
           <template v-slot:navigation>
@@ -594,6 +612,23 @@
           </div>
         </template>
       </basic-modal>
+
+      <basic-modal
+        ref="modalControlTower"
+        @add="add(model.controlTower, temp)"
+        @closing="temp = {}"
+        :isEdit="typeof temp.__index !== 'undefined'"
+      >
+        <template #body>
+          <div class="q-gutter-md">
+            <q-input
+              outlined
+              v-model="temp.codigoProduto"
+              :label="$t('pedido.itens.codigoProduto')"
+            />
+          </div>
+        </template>
+      </basic-modal>
     </div>
   </q-page>
 </template>
@@ -619,7 +654,8 @@ export default {
         itens: [],
         status: [],
         custo: [],
-        condicaoPagamento: []
+        condicaoPagamento: [],
+        controlTower: []
       },
       temp: {},
       adquirenteOpts: [],
@@ -683,6 +719,14 @@ export default {
         { align: 'left', label: 'NCM', field: 'ncm' },
         { align: 'left', label: 'Ações', name: 'acoes' }
       ],
+      controlTowerCols: [
+        { align: 'left', label: 'Código CT', name: 'codigoCT' },
+        { align: 'left', label: 'Ref. Embarque Broker', name: 'refEmbarqueBroker' },
+        { align: 'left', label: 'Data Requisição', name: 'dataRequisicao' },
+        { align: 'left', label: 'Analista Cliente', name: 'analistaCliente' },
+        { align: 'left', label: 'Analista Broker', name: 'analistaBroker' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
       loading: false
     }
   },
@@ -692,7 +736,7 @@ export default {
       try {
         this.loading = true
         if (this.entries.length === 0) {
-          let response = await this.$axios.get(`http://10.129.120.113:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/entries`)
+          let response = await this.$axios.get(`http://localhost:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/entries`)
           this.entries = response.data.data
         }
       } catch (err) {
@@ -730,7 +774,7 @@ export default {
     async filterCondicaoPagamento (val, update, abort) {
       if (!val) return
 
-      let response = await this.$axios.get(`http://10.129.120.113:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
+      let response = await this.$axios.get(`http://localhost:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
       update(() => {
         this.condicaoPagamentoOpts = response.data.data
           .filter(f => String(f.description).includes(val))
@@ -758,7 +802,7 @@ export default {
     async filterMoeda (val, update, abort) {
       if (!val) return
 
-      let response = await this.$axios.get(`http://10.129.120.113:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
+      let response = await this.$axios.get(`http://localhost:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
       update(() => {
         this.moedaOpts = response.data.data
           .filter(f => String(f.description).includes(val))
@@ -768,7 +812,7 @@ export default {
     async filterNCM (val, update, abort) {
       if (!val) return
 
-      let response = await this.$axios.get(`http://10.129.120.113:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
+      let response = await this.$axios.get(`http://localhost:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
       update(() => {
         this.ncmOpts = response.data.data
           .filter(f => String(f.description).includes(val))

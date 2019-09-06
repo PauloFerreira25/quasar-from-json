@@ -68,7 +68,9 @@ module.exports = function (ctx) {
         'QCard',
         'QCardSection',
         'QSeparator',
-        'QAvatar'
+        'QAvatar',
+        'QInnerLoading',
+        'QSpinnerGears'
       ],
 
       directives: [

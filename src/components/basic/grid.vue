@@ -1,7 +1,7 @@
 <template>
   <q-table
     :title="title"
-    :data="data"
+    :data="itens"
     :columns="cols"
     :row-key="rowKey"
     hide-bottom
@@ -26,6 +26,19 @@
           color="negative"
           icon="delete"
           @click="$emit('delete', props.row[rowKey])"
+        />
+      </q-td>
+    </template>
+
+    <template #body-cell-route="props">
+      <q-td>
+        <q-btn
+          flat
+          dense
+          round
+          color="primary"
+          icon="remove_red_eye"
+          @click="$emit('go', props.row[rowKey])"
         />
       </q-td>
     </template>
@@ -55,19 +68,6 @@ export default {
       type: String,
       required: false,
       default: () => '__index'
-    }
-  },
-  data () {
-    return {
-      data: []
-    }
-  },
-  watch: {
-    itens: {
-      deep: true,
-      handler (val) {
-        this.data = val
-      }
     }
   }
 }

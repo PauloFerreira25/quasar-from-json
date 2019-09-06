@@ -1,9 +1,9 @@
 <template>
-  <q-page class="bg-grey-2" padding>
+  <q-page class="bg-grey-2 relative-position" padding>
     <div class="row items-start q-gutter-md">
       <div class="col-8">
         <h1 id="Introduction" class="doc-heading doc-h1">
-          <span>Pedido (123456)</span>
+          Pedido ({{ model.refPedido }})
         </h1>
       </div>
       <div class="col-2">
@@ -19,28 +19,186 @@
     </div>
     <div class="row items-start q-gutter-md">
       <div class="col-8">
-        <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated vertical>
+        <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated vertical flat bordered>
           <q-step :name="1" :title="'Capa'" icon="list" :done="step > 1">
-            <div class="row q-gutter-md">
-              <q-input
-                outlined
-                v-model="model.refPedido"
-                :label="$t('pedido.refPedido')"
+            <div class="row q-gutter-md q-mt-sm">
+              <basic-datetime
+                v-model="model.dataAberturaPO"
+                :label="$t('pedido.dataAberturaPO')"
                 class="col"
-                style="border-color: 2px black"
               />
 
+              <basic-datetime
+                v-model="model.dataPedido"
+                :label="$t('pedido.dataPedido')"
+                class="col"
+              />
+            </div>
+
+            <div class="row q-gutter-md q-mt-sm">
+              <q-select
+                outlined
+                use-input
+                hide-selected
+                fill-input
+                input-debounce="500"
+                v-model="model.importador"
+                :options="importadorOpts"
+                :label="$t('pedido.importador')"
+                option-label="name"
+                option-value="_key"
+                class="col"
+                @filter="filterImportador"
+              >
+                <template #no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+
+              <q-select
+                outlined
+                use-input
+                hide-selected
+                fill-input
+                input-debounce="500"
+                v-model="model.adquirente"
+                :options="adquirenteOpts"
+                :label="$t('pedido.adquirente')"
+                option-label="name"
+                option-value="_key"
+                class="col"
+                @filter="filterAdquirente"
+              >
+                <template #no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+
+            <div class="row q-gutter-md q-mt-sm">
+              <q-select
+                outlined
+                use-input
+                hide-selected
+                fill-input
+                input-debounce="500"
+                v-model="model.comprador"
+                :options="compradorOpts"
+                :label="$t('pedido.comprador')"
+                option-label="name"
+                option-value="_key"
+                class="col"
+                @filter="filterComprador"
+              >
+                <template #no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+
+              <q-select
+                outlined
+                v-model="model.tipoPreco"
+                :options="pedidoStatusOpts"
+                :label="$t('pedido.tipoPreco')"
+                class="col"
+              />
+            </div>
+
+            <div class="row q-gutter-md q-mt-sm">
               <q-input
                 outlined
-                v-model="model.pedidoCliente"
-                :label="$t('pedido.pedidoCliente')"
+                type="textarea"
+                v-model="model.instrucoes"
+                :label="$t('pedido.instrucoes')"
                 class="col"
               />
             </div>
           </q-step>
-          <q-step :name="2" :title="'Itens'" icon="list" :done="step > 2"></q-step>
-          <q-step :name="3" :title="'Condição Pagamento'" icon="list" :done="step > 1"></q-step>
-          <q-step :name="4" :title="'Custos'" icon="list" :done="step > 1"></q-step>
+          <q-step :name="2" :title="'Itens'" icon="list" :done="step > 2">
+            <q-toolbar class="text-grey">
+              <q-toolbar-title>
+                Itens do pedido
+              </q-toolbar-title>
+              <q-btn flat round dense color="primary" icon="add" @click="$refs.modalItens.open()" />
+            </q-toolbar>
+
+            <basic-grid
+              class="fit"
+              :itens="model.itens"
+              :cols="itensCols"
+              @edit="(index) => edit($refs.modalItens, model.itens, '__index', index)"
+              @delete="(index) => del(model.itens, '__index', index)"
+            />
+          </q-step>
+          <q-step :name="3" :title="'Condição Pagamento'" icon="list" :done="step > 3">
+            <div class="row q-gutter-md q-mt-sm">
+              <q-toolbar class="text-grey">
+                <q-toolbar-title>
+                  Condição Pagamento
+                </q-toolbar-title>
+                <q-btn flat round dense color="primary" icon="add" @click="$refs.modalCondicaoPagamento.open()" />
+              </q-toolbar>
+
+              <basic-grid
+                class="fit"
+                :itens="model.condicaoPagamento"
+                :cols="condicaoPagamentoCols"
+                @edit="(index) => edit($refs.modalCondicaoPagamento, model.condicaoPagamento, '__index', index)"
+                @delete="(index) => del(model.condicaoPagamento, '__index', index)"
+              >
+              </basic-grid>
+            </div>
+          </q-step>
+          <q-step :name="4" :title="'Custos'" icon="list" :done="step > 4">
+            <div class="row q-gutter-md q-mt-sm">
+              <q-toolbar class="text-grey">
+                <q-toolbar-title>
+                  Custo
+                </q-toolbar-title>
+                <q-btn flat round dense color="primary" icon="add" @click="$refs.modalCusto.open()" />
+              </q-toolbar>
+
+              <basic-grid
+                class="fit"
+                :itens="model.custo"
+                :cols="custoCols"
+                @edit="(index) => edit($refs.modalCusto, model.custo, '__index', index)"
+                @delete="(index) => del(model.custo, '__index', index)"
+              >
+              </basic-grid>
+            </div>
+          </q-step>
+          <q-step :name="5" :title="'Status'" icon="list" :done="step > 5">
+            <div class="row q-gutter-md q-mt-sm">
+              <q-toolbar class="text-grey">
+                <q-toolbar-title>
+                  Status
+                </q-toolbar-title>
+                <q-btn flat round dense color="primary" icon="add" @click="$refs.modalStatus.open()" />
+              </q-toolbar>
+
+              <basic-grid
+                class="fit"
+                :itens="model.status"
+                :cols="statusCols"
+                @edit="(index) => edit($refs.modalStatus, model.status, '__index', index)"
+                @delete="(index) => del(model.status, '__index', index)"
+              >
+              </basic-grid>
+            </div>
+          </q-step>
         </q-stepper>
       </div>
       <div class="col-2">
@@ -55,19 +213,41 @@
               <q-item>
                 <q-item-section>
                   <q-item-label caption lines="2">Numero do Pedido</q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ model.refPedido }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label caption lines="2">Valor do Pedido</q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ model.valorPedido }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section>
                   <q-item-label caption lines="2">Moeda do pedido</q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ (model.moedaPedido || {}).description }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption lines="2">Exportador</q-item-label>
+                  <q-item-label>
+                    {{ (model.exportador || {}).name }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption lines="2">Status do pedido</q-item-label>
+                  <q-item-label>
+                    {{ model.pedidoStatus }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -77,26 +257,76 @@
             <q-list>
               <q-item clickable>
                 <q-item-section top avatar>
-                  <q-avatar color="primary" text-color="white" icon="bluetooth" />
+                  <q-avatar color="primary" text-color="white" icon="person" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label caption lines="2">
-                    Broken
+                    Broker
                     <q-icon name="edit" />
+                    <q-popup-edit v-model="model.analistaBroker" buttons persistent>
+                      <q-select
+                        use-input
+                        hide-selected
+                        fill-input
+                        input-debounce="500"
+                        v-model="model.analistaBroker"
+                        :options="compradorOpts"
+                        :label="$t('pedido.analistaBroker')"
+                        option-label="name"
+                        option-value="_key"
+                        class="col"
+                        @filter="filterComprador"
+                      >
+                        <template #no-option>
+                          <q-item>
+                            <q-item-section class="text-grey">
+                              No results
+                            </q-item-section>
+                          </q-item>
+                        </template>
+                      </q-select>
+                    </q-popup-edit>
                   </q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ (model.analistaBroker || {}).name }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item clickable>
                 <q-item-section top avatar>
-                  <q-avatar color="primary" text-color="white" icon="bluetooth" />
+                  <q-avatar color="primary" text-color="white" icon="person" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label caption lines="2">
                     Cliente
                     <q-icon name="edit" />
+                    <q-popup-edit v-model="model.analistaCliente" buttons persistent>
+                      <q-select
+                        use-input
+                        hide-selected
+                        fill-input
+                        input-debounce="500"
+                        v-model="model.analistaCliente"
+                        :options="compradorOpts"
+                        :label="$t('pedido.analistaCliente')"
+                        option-label="name"
+                        option-value="_key"
+                        class="col"
+                        @filter="filterComprador"
+                      >
+                        <template #no-option>
+                          <q-item>
+                            <q-item-section class="text-grey">
+                              No results
+                            </q-item-section>
+                          </q-item>
+                        </template>
+                      </q-select>
+                    </q-popup-edit>
                   </q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ (model.analistaCliente || {}).name }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -110,7 +340,9 @@
               <q-item>
                 <q-item-section>
                   <q-item-label caption lines="2">Numero de itens no pedido</q-item-label>
-                  <q-item-label>123456</q-item-label>
+                  <q-item-label>
+                    {{ numItensPedido }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
@@ -122,19 +354,335 @@
             </q-list>
           </q-card-section>
         </q-card>
-        <q-card flat bordered class="my-card">
+
+        <q-card flat bordered class="my-card q-mt-sm">
           <q-card-section>
             <div class="text-h6">Controle</div>
             <div class="text-subtitle2">Ciclo de vida do pedido</div>
           </q-card-section>
-          <q-card-section>
-            <q-btn color="white" text-color="black" label="Validar" />
-            <q-btn color="primary" label="Processar" />
+
+          <q-separator />
+
+          <q-card-actions vertical>
+            <q-btn flat label="Validar" />
+            <q-btn color="primary" label="Processar" @click="processar" :loading="processando" />
             <q-btn color="secondary" label="Fechar" />
-          </q-card-section>
+          </q-card-actions>
         </q-card>
       </div>
+      <basic-modal
+        ref="modalStatus"
+        @add="add(model.status, temp)"
+        @closing="temp = {}"
+        :isEdit="typeof temp.__index !== 'undefined'"
+      >
+        <template #body>
+          <div class="q-gutter-md">
+            <q-input
+              outlined
+              v-model="temp.status"
+              :label="$t('pedido.grid.status.status')"
+            />
+
+            <basic-datetime
+              v-model="temp.dataStatus"
+              mask="HH:mm:ss"
+              :date="false"
+              :label="$t('pedido.grid.status.dataStatus')"
+            />
+          </div>
+        </template>
+      </basic-modal>
+
+      <basic-modal
+        ref="modalCusto"
+        @add="add(model.custo, temp)"
+        @closing="temp = {}"
+        :isEdit="typeof temp.__index !== 'undefined'"
+      >
+        <template #body>
+          <div class="q-gutter-md">
+            <q-input
+              outlined
+              type="number"
+              v-model="temp.despesa"
+              :label="$t('pedido.grid.custo.despesa')"
+            />
+
+            <q-input
+              outlined
+              v-model="temp.valor"
+              type="number"
+              :label="$t('pedido.grid.custo.valor')"
+            />
+          </div>
+        </template>
+      </basic-modal>
+
+      <basic-modal
+        ref="modalCondicaoPagamento"
+        @add="add(model.condicaoPagamento, temp)"
+        @closing="temp = {}"
+        :isEdit="typeof temp.__index !== 'undefined'"
+      >
+        <template #body>
+          <div class="q-gutter-md">
+            <q-select
+              outlined
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="500"
+              v-model="temp.condicaoPagamento"
+              :options="condicaoPagamentoOpts"
+              :label="$t('pedido.condicaoPagamento')"
+              option-label="description"
+              option-value="codigo"
+              class="col"
+              @filter="filterCondicaoPagamento"
+            />
+
+            <q-input
+              outlined
+              type="number"
+              v-model="temp.dias"
+              :label="$t('pedido.quantidadeDias')"
+              class="col"
+            />
+          </div>
+        </template>
+      </basic-modal>
+
+      <basic-modal
+        ref="modalItens"
+        @add="add(model.itens, temp)"
+        @closing="temp = {}"
+        :isEdit="typeof temp.__index !== 'undefined'"
+      >
+        <template #body>
+          <div class="row q-gutter-md q-mt-sm">
+            <q-select
+              outlined
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="500"
+              v-model="temp.produto"
+              :options="produtoOpts"
+              :label="$t('pedido.produto')"
+              option-label="descricaoSimplificada"
+              option-value="_key"
+              class="col"
+              @filter="filterProduto"
+            >
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+
+            <q-input
+              readonly
+              outlined
+              class="col"
+              v-model="fabricante"
+              :label="$t('pedido.itens.fabricante')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-input
+              readonly
+              outlined
+              class="col"
+              v-model="descSimplificada"
+              :label="$t('pedido.itens.descricaoSimplificada')"
+            />
+
+            <q-input
+              readonly
+              outlined
+              class="col"
+              v-model="descCompleta"
+              :label="$t('pedido.itens.descricaoCompletaPT')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-select
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.li"
+              :options="liOpts"
+              :label="$t('pedido.itens.li')"
+            />
+
+            <q-input
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.quantidade"
+              :label="$t('pedido.itens.quantidade')"
+            />
+
+            <q-input
+              readonly
+              type="number"
+              class="col"
+              outlined
+              v-model="temp.quantidadeEmbarcada"
+              :label="$t('pedido.itens.quantidadeEmbarcada')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-input
+              readonly
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.saldo"
+              :label="$t('pedido.itens.saldo')"
+            />
+
+            <q-select
+              outlined
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="500"
+              v-model="temp.unidadeComercializada"
+              :options="unidadeComercializadaOpts"
+              :label="$t('pedido.unidadeComercializada')"
+              option-label="description"
+              option-value="_key"
+              class="col"
+              @filter="filterUnidadeComercializada"
+            >
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-input
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.pesoLiquidoUnitario"
+              :label="$t('pedido.itens.pesoLiquidoUnitario')"
+            />
+
+            <q-input
+              readonly
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.pesoLiquidoTotal"
+              :label="$t('pedido.itens.pesoLiquidoTotal')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-input
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.valorUnitario"
+              :label="$t('pedido.itens.valorUnitario')"
+            />
+
+            <q-input
+              readonly
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.valorTotal"
+              :label="$t('pedido.itens.valorTotal')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-select
+              outlined
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="500"
+              v-model="temp.exportador"
+              :options="exportadorOpts"
+              :label="$t('pedido.itens.exportador')"
+              option-label="name"
+              option-value="_key"
+              class="col"
+              @filter="filterExportador"
+            >
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+
+            <q-input
+              type="number"
+              outlined
+              class="col"
+              v-model="temp.aplicacaoProduto"
+              :label="$t('pedido.itens.aplicacaoProduto')"
+            />
+          </div>
+
+          <div class="row q-gutter-md q-mt-sm">
+            <q-select
+              outlined
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="500"
+              v-model="temp.moeda"
+              :options="moedaOpts"
+              :label="$t('pedido.itens.moeda')"
+              option-label="description"
+              option-value="codigo"
+              class="col"
+              @filter="filterMoeda"
+            >
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+
+            <q-input
+              readonly
+              outlined
+              class="col"
+              v-model="ncm"
+              :label="$t('pedido.itens.ncm')"
+            />
+          </div>
+        </template>
+      </basic-modal>
     </div>
+
+    <q-inner-loading :showing="loading">
+      <q-spinner-gears size="50px" color="primary" />
+    </q-inner-loading>
   </q-page>
 </template>
 
@@ -159,12 +707,370 @@
 </style>
 
 <script>
+import BasicDatetime from '../components/basic/datetime'
+import BasicGrid from '../components/basic/grid'
+import BasicModal from '../components/basic/modal'
+
 export default {
   name: 'PedidoPage',
+
+  components: {
+    BasicDatetime,
+    BasicGrid,
+    BasicModal
+  },
+
   data () {
     return {
       step: 1,
-      model: {}
+      model: {
+        itens: [],
+        status: [],
+        custo: [],
+        condicaoPagamento: [],
+        controlTower: []
+      },
+      temp: {},
+      adquirenteOpts: [],
+      importadorOpts: [],
+      compradorOpts: [],
+      condicaoPagamentoOpts: [],
+      exportadorOpts: [],
+      fabricanteOpts: [],
+      produtoOpts: [],
+      moedaOpts: [],
+      unidadeComercializadaOpts: [],
+      ncmOpts: [],
+      entries: [],
+      pedidoStatusOpts: [{
+        label: 'Aberto',
+        value: 'Aberto'
+      }, {
+        label: 'Fechado',
+        value: 'Fechado'
+      }, {
+        label: '',
+        value: null
+      }],
+      liOpts: [{
+        label: 'Não',
+        value: 'nao'
+      }, {
+        label: 'Pré',
+        value: 'pre'
+      }, {
+        label: 'Pós',
+        value: 'pos'
+      }, {
+        label: '',
+        value: null
+      }],
+      condicaoPagamentoCols: [
+        { align: 'left', label: 'Condicao Pagamento', field: f => f.condicaoPagamento.description },
+        { align: 'left', label: 'Dias', field: 'dias' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
+      custoCols: [
+        { align: 'left', label: 'Despesa', field: 'despesa' },
+        { align: 'left', label: 'Valor', field: 'valor' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
+      statusCols: [
+        { align: 'left', label: 'Status', field: 'status' },
+        { align: 'left', label: 'Data.Status', field: 'dataStatus' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
+      itensCols: [
+        { align: 'left', label: 'Descrição Simplificada', field: f => f.produto ? f.produto.descricaoSimplificada : '' },
+        { align: 'left', label: 'L.I', field: f => f.li ? f.li.label : '' },
+        { align: 'left', label: 'Quantidade', field: 'quantidade' },
+        { align: 'left', label: 'Quantidade Embarcada', field: 'quantidadeEmbarcada' },
+        { align: 'left', label: 'Saldo', field: 'saldo' },
+        { align: 'left', label: 'Unidade Comercializada', field: f => f.unidadeComercializada ? f.unidadeComercializada.description : '' },
+        { align: 'left', label: 'Peso Liquido Unitário', field: 'pesoLiquidoUnitario' },
+        { align: 'left', label: 'Peso Liquido Total', field: 'pesoLiquidoTotal' },
+        { align: 'left', label: 'Valor Unitário', field: 'valorUnitario' },
+        { align: 'left', label: 'Valor Total', field: 'valorTotal' },
+        { align: 'left', label: 'NCM', field: f => f.ncm ? f.ncm.description : '' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
+      controlTowerCols: [
+        { align: 'left', label: 'Código CT', name: 'codigoCT' },
+        { align: 'left', label: 'Ref. Embarque Broker', name: 'refEmbarqueBroker' },
+        { align: 'left', label: 'Data Requisição', name: 'dataRequisicao' },
+        { align: 'left', label: 'Analista Cliente', name: 'analistaCliente' },
+        { align: 'left', label: 'Analista Broker', name: 'analistaBroker' },
+        { align: 'left', label: 'Ações', name: 'acoes' }
+      ],
+      loading: false,
+      processando: false
+    }
+  },
+
+  computed: {
+    numItensPedido () {
+      return this.model.itens.length
+    },
+
+    fabricante () {
+      return this.temp.produto ? this.temp.produto.fabricante : ''
+    },
+
+    descSimplificada () {
+      return this.temp.produto ? this.temp.produto.descricaoSimplificada : ''
+    },
+
+    descCompleta () {
+      return this.temp.produto ? this.temp.produto.descricaoCompletaPT : ''
+    },
+
+    ncm () {
+      return this.temp.produto ? this.temp.produto.ncm : ''
+    }
+  },
+
+  methods: {
+    async loadData () {
+      try {
+        this.loading = true
+        if (this.entries.length === 0) {
+          let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/entries`)
+          this.entries = response.data.data
+        }
+
+        if (this.$route.params.id) {
+          let response = await this.$axios.get(
+            `http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido/${this.$route.params.id}`
+          )
+          this.model = response.data.data
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async processar () {
+      try {
+        this.processando = true
+        let method = this.$route.params.id
+          ? 'patch'
+          : 'post'
+
+        let baseURL = 'http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido'
+        let url = this.$route.params.id
+          ? `${baseURL}/${this.$route.params.id}`
+          : baseURL
+
+        let response = await this.$axios({
+          url,
+          method,
+          data: this.model
+        })
+
+        this.$q.notify({
+          message: 'Processado com sucesso',
+          color: 'positive'
+        })
+
+        if (!this.$route.params.id) {
+          this.$router.push(`/pedido_paulo/${response.data.status._key}`)
+        }
+      } catch (err) {
+        this.$q.notify({
+          message: 'Oh oh, algo deu errado',
+          color: 'negative'
+        })
+      } finally {
+        this.processando = false
+      }
+    },
+
+    async filterImportador (val, update, abort) {
+      if (!val) return
+      update(() => {
+        this.importadorOpts = this.entries
+          .filter(f => f.importer)
+          .filter(f => String(f.name).includes(val))
+      })
+    },
+
+    async filterAdquirente (val, update, abort) {
+      if (!val) return
+      update(() => {
+        this.adquirenteOpts = this.entries
+          .filter(f => String(f.name).includes(val))
+      })
+    },
+
+    async filterComprador (val, update, abort) {
+      if (!val) return
+      update(() => {
+        this.compradorOpts = this.entries
+          .filter(f => f.cpf)
+          .filter(f => String(f.name).includes(val))
+      })
+    },
+
+    async filterProduto (val, update, abort) {
+      if (!val) return
+
+      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/products`)
+      update(() => {
+        this.produtoOpts = response.data.data
+          .filter(f =>
+            String(f.codigo).includes(val) ||
+            String(f.codigo2).includes(val) ||
+            String(f.descricaoSimplificada).includes(val) ||
+            String(f.descricaoCompletaPT).includes(val)
+          )
+      })
+    },
+
+    async filterUnidadeComercializada (val, update, abort) {
+      if (!val) return
+
+      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_unidade_medida`)
+      update(() => {
+        this.unidadeComercializadaOpts = response.data.data
+          .filter(f => String(f.description).includes(val))
+      })
+    },
+
+    async filterCondicaoPagamento (val, update, abort) {
+      if (!val) return
+
+      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
+      update(() => {
+        this.condicaoPagamentoOpts = response.data.data
+          .filter(f => String(f.description).includes(val))
+      })
+    },
+
+    async filterExportador (val, update, abort) {
+      if (!val) return
+      update(() => {
+        this.exportadorOpts = this.entries
+          .filter(f => f.exporter)
+          .filter(f => String(f.name).includes(val))
+      })
+    },
+
+    async filterFabricante (val, update, abort) {
+      if (!val) return
+      update(() => {
+        this.fabricanteOpts = this.entries
+          .filter(f => f.cnpj && f.maker)
+          .filter(f => String(f.name).includes(val))
+      })
+    },
+
+    async filterMoeda (val, update, abort) {
+      if (!val) return
+
+      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
+      update(() => {
+        this.moedaOpts = response.data.data
+          .filter(f => String(f.description).includes(val) || String(f.codigo).includes(val))
+      })
+    },
+
+    async filterNCM (val, update, abort) {
+      if (!val) return
+
+      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
+      update(() => {
+        this.ncmOpts = response.data.data
+          .filter(f => String(f.description).includes(val))
+      })
+    },
+
+    add (array, model) {
+      if (!Array.isArray(array)) {
+        console.warn(`${array} não era um array!`)
+        array = []
+      }
+      array.push(model)
+    },
+
+    edit (modal, array, comparador, search) {
+      if (!Array.isArray(array)) {
+        return console.warn(`${array} não era um array!`)
+      }
+
+      this.temp = array.find(f => f[comparador] === search)
+      modal.open()
+    },
+
+    del (array, comparador, val) {
+      if (!Array.isArray(array)) {
+        return console.warn(`${array} não era um array!`)
+      }
+
+      let index = array.findIndex(f => f[comparador] === val)
+
+      if (index > -1) {
+        array.splice(index, 1)
+      }
+    }
+  },
+
+  watch: {
+    'temp.pesoLiquidoUnitario' (val) {
+      if (val && this.temp.quantidade) {
+        this.temp.pesoLiquidoTotal = val * this.temp.quantidade
+      }
+    },
+
+    'temp.quantidade' (val) {
+      if (val && this.temp.pesoLiquidoTotal) {
+        this.temp.pesoLiquidoTotal = val * this.temp.pesoLiquidoTotal
+      }
+
+      if (val && this.temp.valorUnitario) {
+        this.temp.valorTotal = val * this.temp.valorUnitario
+      }
+    },
+
+    'temp.valorUnitario' (val) {
+      if (val && this.temp.quantidade) {
+        this.temp.valorTotal = val * this.temp.quantidade
+      }
+    },
+
+    '$route.params.id' (val) {
+      if (!val) {
+        this.model = {
+          itens: [],
+          status: [],
+          custo: [],
+          condicaoPagamento: [],
+          controlTower: []
+        }
+        return
+      }
+      this.loadData()
+    },
+
+    'model.itens': {
+      deep: true,
+      handler (val) {
+        if (val.length > 0) {
+          this.model.exportador = val[0].exportador
+          this.model.moedaPedido = val[0].moeda
+          this.model.valorPedido = val.reduce((acc, atual) => acc + Number(atual.valorTotal || 0), 0)
+        }
+      }
+    }
+  },
+
+  created () {
+    this.loadData()
+
+    if (!this.$route.params.id) {
+      this.model.refPedido = '19PCX0001'
+      this.model.pedidoStatus = 'Aberto'
     }
   }
 }
