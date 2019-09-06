@@ -1,15 +1,46 @@
 <template>
   <q-page class="bg-grey-2" padding>
-    <h1 id="Introduction" class="doc-heading doc-h1">
-      <span>Pedido (123456)</span>
-    </h1>
+    <div class="row items-start q-gutter-md">
+      <div class="col-8">
+        <h1 id="Introduction" class="doc-heading doc-h1">
+          <span>Pedido (123456)</span>
+        </h1>
+      </div>
+      <div class="col-2">
+        <div class="text-purple q-gutter-md" style="font-size: 2em">
+          <q-icon name="font_download" />
+          <q-icon name="warning" />
+          <q-icon name="format_size" />
+          <q-icon name="print" />
+          <q-icon name="today" />
+          <q-icon name="style" />
+        </div>
+      </div>
+    </div>
     <div class="row items-start q-gutter-md">
       <div class="col-8">
         <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated vertical>
-          <q-step :name="1" :title="'Capa'" icon="list" :done="step > 1"></q-step>
-          <q-step :name="1" :title="'Itens'" icon="list" :done="step > 1"></q-step>
-          <q-step :name="1" :title="'Condição Pagamento'" icon="list" :done="step > 1"></q-step>
-          <q-step :name="1" :title="'Custos'" icon="list" :done="step > 1"></q-step>
+          <q-step :name="1" :title="'Capa'" icon="list" :done="step > 1">
+            <div class="row q-gutter-md">
+              <q-input
+                outlined
+                v-model="model.refPedido"
+                :label="$t('pedido.refPedido')"
+                class="col"
+                style="border-color: 2px black"
+              />
+
+              <q-input
+                outlined
+                v-model="model.pedidoCliente"
+                :label="$t('pedido.pedidoCliente')"
+                class="col"
+              />
+            </div>
+          </q-step>
+          <q-step :name="2" :title="'Itens'" icon="list" :done="step > 2"></q-step>
+          <q-step :name="3" :title="'Condição Pagamento'" icon="list" :done="step > 1"></q-step>
+          <q-step :name="4" :title="'Custos'" icon="list" :done="step > 1"></q-step>
         </q-stepper>
       </div>
       <div class="col-2">
@@ -126,3 +157,15 @@
   max-width: 250px;
 }
 </style>
+
+<script>
+export default {
+  name: 'PedidoPage',
+  data () {
+    return {
+      step: 1,
+      model: {}
+    }
+  }
+}
+</script>
