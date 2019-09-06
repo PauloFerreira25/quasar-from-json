@@ -64,7 +64,11 @@ module.exports = function (ctx) {
         'QDate',
         'QOptionGroup',
         'QDialog',
-        'QCardActions'
+        'QCardActions',
+        'QCard',
+        'QCardSection',
+        'QSeparator',
+        'QAvatar'
       ],
 
       directives: [
