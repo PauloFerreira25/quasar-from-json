@@ -373,7 +373,7 @@
       <basic-modal
         ref="modalStatus"
         @add="add(model.status, temp)"
-        @closing="temp = {}"
+        @closing="closeStatus"
         :isEdit="typeof temp.__index !== 'undefined'"
       >
         <template #body>
@@ -404,7 +404,6 @@
           <div class="q-gutter-md">
             <q-input
               outlined
-              type="number"
               v-model="temp.despesa"
               :label="$t('pedido.grid.custo.despesa')"
             />
@@ -724,6 +723,7 @@ export default {
     return {
       step: 1,
       model: {
+        refPedido: '',
         itens: [],
         status: [],
         custo: [],
@@ -888,7 +888,6 @@ export default {
     },
 
     async filterImportador (val, update, abort) {
-      if (!val) return
       update(() => {
         this.importadorOpts = this.entries
           .filter(f => f.importer)
@@ -897,7 +896,6 @@ export default {
     },
 
     async filterAdquirente (val, update, abort) {
-      if (!val) return
       update(() => {
         this.adquirenteOpts = this.entries
           .filter(f => String(f.name).includes(val))
@@ -905,7 +903,6 @@ export default {
     },
 
     async filterComprador (val, update, abort) {
-      if (!val) return
       update(() => {
         this.compradorOpts = this.entries
           .filter(f => f.cpf)
@@ -914,8 +911,6 @@ export default {
     },
 
     async filterProduto (val, update, abort) {
-      if (!val) return
-
       let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/products`)
       update(() => {
         this.produtoOpts = response.data.data
@@ -929,8 +924,6 @@ export default {
     },
 
     async filterUnidadeComercializada (val, update, abort) {
-      if (!val) return
-
       let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_unidade_medida`)
       update(() => {
         this.unidadeComercializadaOpts = response.data.data
@@ -939,8 +932,6 @@ export default {
     },
 
     async filterCondicaoPagamento (val, update, abort) {
-      if (!val) return
-
       let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
       update(() => {
         this.condicaoPagamentoOpts = response.data.data
@@ -949,7 +940,6 @@ export default {
     },
 
     async filterExportador (val, update, abort) {
-      if (!val) return
       update(() => {
         this.exportadorOpts = this.entries
           .filter(f => f.exporter)
@@ -958,7 +948,6 @@ export default {
     },
 
     async filterFabricante (val, update, abort) {
-      if (!val) return
       update(() => {
         this.fabricanteOpts = this.entries
           .filter(f => f.cnpj && f.maker)
@@ -967,8 +956,6 @@ export default {
     },
 
     async filterMoeda (val, update, abort) {
-      if (!val) return
-
       let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
       update(() => {
         this.moedaOpts = response.data.data
@@ -977,8 +964,6 @@ export default {
     },
 
     async filterNCM (val, update, abort) {
-      if (!val) return
-
       let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
       update(() => {
         this.ncmOpts = response.data.data
@@ -1013,6 +998,15 @@ export default {
       if (index > -1) {
         array.splice(index, 1)
       }
+    },
+
+    closeStatus () {
+      if (!this.temp.dataStatus) {
+        let date = new Date()
+        this.temp.dataStatus = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      }
+
+      this.temp = {}
     }
   },
 
@@ -1069,8 +1063,23 @@ export default {
     this.loadData()
 
     if (!this.$route.params.id) {
-      this.model.refPedido = '19PCX0001'
-      this.model.pedidoStatus = 'Aberto'
+      // Gambeta
+      this.$axios.get(
+        `http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
+      ).then(response => {
+        let ultimo = response.data.data
+          .reduce((acc, atual) => {
+            let ref = Number(atual.refPedido.split('PCX')[1]) + 1
+            return ref > acc ? ref : acc
+          }, 0)
+
+        let ref = String(ultimo).length < 4
+          ? '0'.repeat(4 - String(ultimo).length) + ultimo
+          : ultimo
+
+        this.model.refPedido = `19PCX${ref}`
+        this.model.pedidoStatus = 'Aberto'
+      })
     }
   }
 }

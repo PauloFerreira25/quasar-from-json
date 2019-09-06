@@ -2,31 +2,21 @@
   <q-page class="bg-grey-2 relative-position" padding>
     <div class="full-width column wrap justify-start items-center">
       <div style="width: 50vw">
-        <q-stepper
-          v-model="step"
-          header-nav
-          ref="stepper"
-          color="primary"
-          class="q-mt-md"
-          animated
-          vertical
+        <q-toolbar class="text-primary">
+          <q-toolbar-title>
+            Pedidos
+          </q-toolbar-title>
+          <q-btn flat round dense icon="add" @click="$router.push('pedido_paulo')" />
+        </q-toolbar>
+
+        <basic-grid
+          class="fit q-mt-sm"
+          :itens="model.pedidos"
+          :cols="cols"
+          :row-key="'_key'"
+          @go="id => $router.push(`/pedido_paulo/${id}`)"
         >
-          <q-step
-            icon="list"
-            :name="1"
-            :title="'Pedidos'"
-            :done="step > 1"
-          >
-            <basic-grid
-              class="fit q-mt-sm"
-              :itens="model.pedidos"
-              :cols="cols"
-              :row-key="'_key'"
-              @go="id => $router.push(`/pedido_paulo/${id}`)"
-            >
-            </basic-grid>
-          </q-step>
-        </q-stepper>
+        </basic-grid>
       </div>
     </div>
 
