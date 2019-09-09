@@ -64,8 +64,8 @@ export default {
     createTransition (renderFunction, childrens) {
       return renderFunction('transition', {
         props: {
-          'enter-active-class': 'animated flipInY',
-          'leave-active-class': 'animated flipOutY',
+          'enter-active-class': 'animated slideInLeft',
+          'leave-active-class': 'animated slideOutRight',
           mode: 'out-in'
         }
       }, childrens)

@@ -123,7 +123,10 @@ module.exports = function (ctx) {
     // animations: 'all', // --- includes all animations
     animations: [
       'flipInY',
-      'flipOutY'
+      'flipOutY',
+      'flip',
+      'slideInLeft',
+      'slideOutRight'
     ],
 
     ssr: {
