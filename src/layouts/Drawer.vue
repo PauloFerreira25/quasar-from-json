@@ -53,14 +53,19 @@ export default {
       childrens.unshift(this.createItem(renderFunction, templateClone))
     }
 
-    return renderFunction('q-list', {}, childrens)
+    return this.createTransition(renderFunction, [
+      renderFunction('q-list', {
+        key: this.currentPath.length
+      }, childrens)
+    ])
   },
 
   methods: {
     createTransition (renderFunction, childrens) {
-      return renderFunction('transition-group', {
+      return renderFunction('transition', {
         props: {
-          name: 'slide-fade',
+          'enter-active-class': 'animated flipInY',
+          'leave-active-class': 'animated flipOutY',
           mode: 'out-in'
         }
       }, childrens)

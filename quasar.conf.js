@@ -105,9 +105,13 @@ module.exports = function (ctx) {
         })
       },
 
-      env: {
-        API: JSON.stringify('http://10.129.120.98:3000')
-      }
+      env: ctx.dev
+        ? {
+          API: JSON.stringify('http://localhost:3000')
+        }
+        : {
+          API: JSON.stringify('http://10.129.120.98:3000')
+        }
     },
 
     devServer: {
@@ -117,7 +121,10 @@ module.exports = function (ctx) {
     },
 
     // animations: 'all', // --- includes all animations
-    animations: [],
+    animations: [
+      'flipInY',
+      'flipOutY'
+    ],
 
     ssr: {
       pwa: false
