@@ -1,6 +1,6 @@
 <template>
   <q-page class="bg-grey-2 relative-position" padding>
-    <div class="row items-start q-gutter-md">
+    <div class="row items-start justify-center q-gutter-md">
       <div class="col-8">
         <h1 id="Introduction" class="doc-heading doc-h1">
           Pedido ({{ model.refPedido }})
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="row items-start q-gutter-md">
+    <div class="row items-start justify-center q-gutter-md">
       <div class="col-8">
         <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated vertical flat bordered>
           <q-step :name="1" :title="'Capa'" icon="list" :done="step > 1">
@@ -834,13 +834,13 @@ export default {
       try {
         this.loading = true
         if (this.entries.length === 0) {
-          let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/entries`)
+          let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/entries`)
           this.entries = response.data.data
         }
 
         if (this.$route.params.id) {
           let response = await this.$axios.get(
-            `http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido/${this.$route.params.id}`
+            `${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido/${this.$route.params.id}`
           )
           this.model = response.data.data
         }
@@ -858,7 +858,7 @@ export default {
           ? 'patch'
           : 'post'
 
-        let baseURL = 'http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido'
+        let baseURL = `${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
         let url = this.$route.params.id
           ? `${baseURL}/${this.$route.params.id}`
           : baseURL
@@ -911,7 +911,7 @@ export default {
     },
 
     async filterProduto (val, update, abort) {
-      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/products`)
+      let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/products`)
       update(() => {
         this.produtoOpts = response.data.data
           .filter(f =>
@@ -924,7 +924,7 @@ export default {
     },
 
     async filterUnidadeComercializada (val, update, abort) {
-      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_unidade_medida`)
+      let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_unidade_medida`)
       update(() => {
         this.unidadeComercializadaOpts = response.data.data
           .filter(f => String(f.description).includes(val))
@@ -932,7 +932,7 @@ export default {
     },
 
     async filterCondicaoPagamento (val, update, abort) {
-      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
+      let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_condicao_pagamento`)
       update(() => {
         this.condicaoPagamentoOpts = response.data.data
           .filter(f => String(f.description).includes(val))
@@ -956,7 +956,7 @@ export default {
     },
 
     async filterMoeda (val, update, abort) {
-      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
+      let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_moeda`)
       update(() => {
         this.moedaOpts = response.data.data
           .filter(f => String(f.description).includes(val) || String(f.codigo).includes(val))
@@ -964,7 +964,7 @@ export default {
     },
 
     async filterNCM (val, update, abort) {
-      let response = await this.$axios.get(`http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
+      let response = await this.$axios.get(`${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/siscomex_ncm`)
       update(() => {
         this.ncmOpts = response.data.data
           .filter(f => String(f.description).includes(val))
@@ -1065,7 +1065,7 @@ export default {
     if (!this.$route.params.id) {
       // Gambeta
       this.$axios.get(
-        `http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
+        `${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
       ).then(response => {
         let ultimo = response.data.data
           .reduce((acc, atual) => {

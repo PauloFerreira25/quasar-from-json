@@ -56,7 +56,7 @@ export default {
       try {
         this.loading = true
         let response = await this.$axios.get(
-          `http://10.129.120.202:3000/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
+          `${process.env.API}/79f650f1-8b35-484d-b78c-2f76a66d168e/importacao_pedido`
         )
 
         this.model.pedidos = response.data.data

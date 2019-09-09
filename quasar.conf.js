@@ -103,6 +103,10 @@ module.exports = function (ctx) {
             formatter: require('eslint').CLIEngine.getFormatter('stylish')
           }
         })
+      },
+
+      env: {
+        API: JSON.stringify('http://10.129.120.98:3000')
       }
     },
 

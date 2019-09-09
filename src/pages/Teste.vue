@@ -29,7 +29,7 @@ export default {
       immediate: true,
       async handler (val) {
         console.log(val)
-        let response = await this.$axios.get(`http://10.129.120.113:3000/dynamicPage/byName?path=/${val}`)
+        let response = await this.$axios.get(`${process.env.API}/dynamicPage/byName?path=/${val}`)
         this.currentPage = response.data.data.data
       }
     }
