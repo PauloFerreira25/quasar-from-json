@@ -116,9 +116,6 @@ export default {
     },
 
     checkPath (item) {
-      if (item.to) {
-        return () => {}
-      }
       return () => {
         if (item.returnButton) {
           return this.currentPath.pop()

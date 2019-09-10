@@ -70,7 +70,8 @@ module.exports = function (ctx) {
         'QSeparator',
         'QAvatar',
         'QInnerLoading',
-        'QSpinnerGears'
+        'QSpinnerGears',
+        'QField'
       ],
 
       directives: [

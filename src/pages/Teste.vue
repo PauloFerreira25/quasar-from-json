@@ -1,22 +1,42 @@
 <template>
-  <quasar-from-json
+  <!-- <quasar-from-json
     v-if="drawPage"
     :item="currentPage"
-  />
+  /> -->
+  <div class="q-pa-xl">
+    <pre>{{ model }}</pre>
+
+    <q-btn label="open" @click="$refs.modal.open()" />
+    <modal
+      :model="model.anotherModel"
+      ref="modal"
+      :is-edit="true"
+      @update="data => model.anotherModel = data"
+    >
+      <template #body="{ model }">
+        <q-input v-model="model.input" />
+      </template>
+    </modal>
+  </div>
 </template>
 
 <script>
-import QuasarFromJson from '../components/quasar-from-json/quasar-from-json'
+// import QuasarFromJson from '../components/quasar-from-json/quasar-from-json'
+import Modal from '../components/basic/modal'
 
 export default {
   name: 'TestPage',
   components: {
-    QuasarFromJson
+    // QuasarFromJson
+    Modal
   },
   data () {
     return {
       currentPage: null,
-      page: null
+      page: null,
+      model: {
+        anotherModel: {}
+      }
     }
   },
   computed: {

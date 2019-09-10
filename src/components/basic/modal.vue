@@ -8,14 +8,15 @@
       </q-card-section>
 
       <q-card-section style="max-height: 50vh" class="scroll">
-        <slot name="body">
-        </slot>
+        <slot name="body" :model="innerModel"></slot>
       </q-card-section>
 
-      <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" @click="close" />
-        <q-btn color="primary" :label="isEdit ? 'Update' : 'Add'" @click="add" />
-      </q-card-actions>
+      <slot name="actions">
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancel" @click="close" />
+          <q-btn color="primary" :label="isEdit ? 'Update' : 'Add'" @click="update" />
+        </q-card-actions>
+      </slot>
     </q-card>
   </q-dialog>
 </template>
@@ -25,6 +26,11 @@ export default {
   name: 'BasicModal',
 
   props: {
+    model: {
+      required: true,
+      default: () => {}
+    },
+
     title: {
       type: String,
       required: false,
@@ -40,7 +46,17 @@ export default {
 
   data () {
     return {
-      oppened: false
+      oppened: false,
+      innerModel: null
+    }
+  },
+
+  watch: {
+    model: {
+      immediate: true,
+      handler (val) {
+        this.innerModel = JSON.parse(JSON.stringify(val))
+      }
     }
   },
 
@@ -50,14 +66,11 @@ export default {
     },
 
     close () {
-      this.$emit('closing')
       this.oppened = false
     },
 
-    add () {
-      if (!this.isEdit) {
-        this.$emit('add')
-      }
+    update () {
+      this.$emit('update', this.innerModel)
       this.close()
     }
   }

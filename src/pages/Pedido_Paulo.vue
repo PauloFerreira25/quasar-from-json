@@ -372,20 +372,20 @@
       </div>
       <basic-modal
         ref="modalStatus"
-        @add="add(model.status, temp)"
-        @closing="closeStatus"
+        :model="temp"
+        @update="data => add(model.status, data)"
         :isEdit="typeof temp.__index !== 'undefined'"
       >
-        <template #body>
+        <template #body="{ model }">
           <div class="q-gutter-md">
             <q-input
               outlined
-              v-model="temp.status"
+              v-model="model.status"
               :label="$t('pedido.grid.status.status')"
             />
 
             <basic-datetime
-              v-model="temp.dataStatus"
+              v-model="model.dataStatus"
               mask="HH:mm:ss"
               :date="false"
               :label="$t('pedido.grid.status.dataStatus')"
@@ -396,21 +396,21 @@
 
       <basic-modal
         ref="modalCusto"
-        @add="add(model.custo, temp)"
-        @closing="temp = {}"
+        :model="temp"
+        @update="data => add(model.custo, data)"
         :isEdit="typeof temp.__index !== 'undefined'"
       >
-        <template #body>
+        <template #body="{ model }">
           <div class="q-gutter-md">
             <q-input
               outlined
-              v-model="temp.despesa"
+              v-model="model.despesa"
               :label="$t('pedido.grid.custo.despesa')"
             />
 
             <q-input
               outlined
-              v-model="temp.valor"
+              v-model="model.valor"
               type="number"
               :label="$t('pedido.grid.custo.valor')"
             />
@@ -420,11 +420,11 @@
 
       <basic-modal
         ref="modalCondicaoPagamento"
-        @add="add(model.condicaoPagamento, temp)"
-        @closing="temp = {}"
+        :model="temp"
+        @update="data => add(model.condicaoPagamento, data)"
         :isEdit="typeof temp.__index !== 'undefined'"
       >
-        <template #body>
+        <template #body="{ model }">
           <div class="q-gutter-md">
             <q-select
               outlined
@@ -432,7 +432,7 @@
               hide-selected
               fill-input
               input-debounce="500"
-              v-model="temp.condicaoPagamento"
+              v-model="model.condicaoPagamento"
               :options="condicaoPagamentoOpts"
               :label="$t('pedido.condicaoPagamento')"
               option-label="description"
@@ -444,7 +444,7 @@
             <q-input
               outlined
               type="number"
-              v-model="temp.dias"
+              v-model="model.dias"
               :label="$t('pedido.quantidadeDias')"
               class="col"
             />
@@ -454,11 +454,11 @@
 
       <basic-modal
         ref="modalItens"
-        @add="add(model.itens, temp)"
-        @closing="temp = {}"
+        :model="temp"
+        @update="data => add(model.itens, data)"
         :isEdit="typeof temp.__index !== 'undefined'"
       >
-        <template #body>
+        <template #body="{ model }">
           <div class="row q-gutter-md q-mt-sm">
             <q-select
               outlined
@@ -466,7 +466,7 @@
               hide-selected
               fill-input
               input-debounce="500"
-              v-model="temp.produto"
+              v-model="model.produto"
               :options="produtoOpts"
               :label="$t('pedido.produto')"
               option-label="descricaoSimplificada"
@@ -483,31 +483,58 @@
               </template>
             </q-select>
 
-            <q-input
+            <q-field
               readonly
               outlined
               class="col"
-              v-model="fabricante"
+              stack-label
               :label="$t('pedido.itens.fabricante')"
-            />
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.produto ? model.produto.fabricante : '' }}
+                </div>
+              </template>
+            </q-field>
           </div>
 
           <div class="row q-gutter-md q-mt-sm">
-            <q-input
+            <q-field
               readonly
               outlined
               class="col"
-              v-model="descSimplificada"
+              stack-label
               :label="$t('pedido.itens.descricaoSimplificada')"
-            />
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.produto ? model.produto.descricaoSimplificada : '' }}
+                </div>
+              </template>
+            </q-field>
 
-            <q-input
+            <q-field
               readonly
               outlined
               class="col"
-              v-model="descCompleta"
-              :label="$t('pedido.itens.descricaoCompletaPT')"
-            />
+              stack-label
+              :label="$t('pedido.itens.descCompleta')"
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.produto ? model.produto.descricaoCompletaPT : '' }}
+                </div>
+              </template>
+            </q-field>
           </div>
 
           <div class="row q-gutter-md q-mt-sm">
@@ -515,7 +542,7 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.li"
+              v-model="model.li"
               :options="liOpts"
               :label="$t('pedido.itens.li')"
             />
@@ -524,7 +551,7 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.quantidade"
+              v-model="model.quantidade"
               :label="$t('pedido.itens.quantidade')"
             />
 
@@ -533,7 +560,7 @@
               type="number"
               class="col"
               outlined
-              v-model="temp.quantidadeEmbarcada"
+              v-model="model.quantidadeEmbarcada"
               :label="$t('pedido.itens.quantidadeEmbarcada')"
             />
           </div>
@@ -544,7 +571,7 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.saldo"
+              v-model="model.saldo"
               :label="$t('pedido.itens.saldo')"
             />
 
@@ -554,7 +581,7 @@
               hide-selected
               fill-input
               input-debounce="500"
-              v-model="temp.unidadeComercializada"
+              v-model="model.unidadeComercializada"
               :options="unidadeComercializadaOpts"
               :label="$t('pedido.unidadeComercializada')"
               option-label="description"
@@ -577,18 +604,26 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.pesoLiquidoUnitario"
+              v-model="model.pesoLiquidoUnitario"
               :label="$t('pedido.itens.pesoLiquidoUnitario')"
             />
 
-            <q-input
+            <q-field
               readonly
-              type="number"
               outlined
               class="col"
-              v-model="temp.pesoLiquidoTotal"
+              stack-label
               :label="$t('pedido.itens.pesoLiquidoTotal')"
-            />
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.pesoLiquidoUnitario && model.quantidade ? model.pesoLiquidoUnitario * model.quantidade : 0 }}
+                </div>
+              </template>
+            </q-field>
           </div>
 
           <div class="row q-gutter-md q-mt-sm">
@@ -596,18 +631,26 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.valorUnitario"
+              v-model="model.valorUnitario"
               :label="$t('pedido.itens.valorUnitario')"
             />
 
-            <q-input
+            <q-field
               readonly
-              type="number"
               outlined
               class="col"
-              v-model="temp.valorTotal"
+              stack-label
               :label="$t('pedido.itens.valorTotal')"
-            />
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.valorUnitario && model.quantidade ? model.valorUnitario * model.quantidade : 0 }}
+                </div>
+              </template>
+            </q-field>
           </div>
 
           <div class="row q-gutter-md q-mt-sm">
@@ -617,7 +660,7 @@
               hide-selected
               fill-input
               input-debounce="500"
-              v-model="temp.exportador"
+              v-model="model.exportador"
               :options="exportadorOpts"
               :label="$t('pedido.itens.exportador')"
               option-label="name"
@@ -638,7 +681,7 @@
               type="number"
               outlined
               class="col"
-              v-model="temp.aplicacaoProduto"
+              v-model="model.aplicacaoProduto"
               :label="$t('pedido.itens.aplicacaoProduto')"
             />
           </div>
@@ -650,7 +693,7 @@
               hide-selected
               fill-input
               input-debounce="500"
-              v-model="temp.moeda"
+              v-model="model.moeda"
               :options="moedaOpts"
               :label="$t('pedido.itens.moeda')"
               option-label="description"
@@ -667,13 +710,22 @@
               </template>
             </q-select>
 
-            <q-input
+            <q-field
               readonly
               outlined
               class="col"
-              v-model="ncm"
+              stack-label
               :label="$t('pedido.itens.ncm')"
-            />
+            >
+              <template #control>
+                <div
+                  tabindex="0"
+                  class="self-center full-width no-outline"
+                >
+                  {{ model.produto ? model.produto.ncm : '' }}
+                </div>
+              </template>
+            </q-field>
           </div>
         </template>
       </basic-modal>
@@ -788,10 +840,10 @@ export default {
         { align: 'left', label: 'Saldo', field: 'saldo' },
         { align: 'left', label: 'Unidade Comercializada', field: f => f.unidadeComercializada ? f.unidadeComercializada.description : '' },
         { align: 'left', label: 'Peso Liquido Unitário', field: 'pesoLiquidoUnitario' },
-        { align: 'left', label: 'Peso Liquido Total', field: 'pesoLiquidoTotal' },
+        { align: 'left', label: 'Peso Liquido Total', field: f => f.pesoLiquidoUnitario && f.quantidade ? f.pesoLiquidoUnitario * f.quantidade : 0 },
         { align: 'left', label: 'Valor Unitário', field: 'valorUnitario' },
-        { align: 'left', label: 'Valor Total', field: 'valorTotal' },
-        { align: 'left', label: 'NCM', field: f => f.ncm ? f.ncm.description : '' },
+        { align: 'left', label: 'Valor Total', field: f => f.valorUnitario && f.quantidade ? f.valorUnitario * f.quantidade : 0 },
+        { align: 'left', label: 'NCM', field: f => f.produto ? f.produto.ncm : '' },
         { align: 'left', label: 'Ações', name: 'acoes' }
       ],
       controlTowerCols: [
@@ -810,22 +862,6 @@ export default {
   computed: {
     numItensPedido () {
       return this.model.itens.length
-    },
-
-    fabricante () {
-      return this.temp.produto ? this.temp.produto.fabricante : ''
-    },
-
-    descSimplificada () {
-      return this.temp.produto ? this.temp.produto.descricaoSimplificada : ''
-    },
-
-    descCompleta () {
-      return this.temp.produto ? this.temp.produto.descricaoCompletaPT : ''
-    },
-
-    ncm () {
-      return this.temp.produto ? this.temp.produto.ncm : ''
     }
   },
 
@@ -976,6 +1012,16 @@ export default {
         console.warn(`${array} não era um array!`)
         array = []
       }
+
+      if (typeof model.__index !== 'undefined') {
+        let index = array.findIndex(f => f.__index === model.__index)
+        if (index !== -1) {
+          this.$set(array, index, model)
+          this.temp = {}
+          return
+        }
+      }
+
       array.push(model)
     },
 
@@ -1000,39 +1046,15 @@ export default {
       }
     },
 
-    closeStatus () {
-      if (!this.temp.dataStatus) {
+    closeStatus (val) {
+      if (val && !val.dataStatus) {
         let date = new Date()
-        this.temp.dataStatus = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        val.dataStatus = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       }
-
-      this.temp = {}
     }
   },
-
+  // TODO: concertar
   watch: {
-    'temp.pesoLiquidoUnitario' (val) {
-      if (val && this.temp.quantidade) {
-        this.temp.pesoLiquidoTotal = val * this.temp.quantidade
-      }
-    },
-
-    'temp.quantidade' (val) {
-      if (val && this.temp.pesoLiquidoTotal) {
-        this.temp.pesoLiquidoTotal = val * this.temp.pesoLiquidoTotal
-      }
-
-      if (val && this.temp.valorUnitario) {
-        this.temp.valorTotal = val * this.temp.valorUnitario
-      }
-    },
-
-    'temp.valorUnitario' (val) {
-      if (val && this.temp.quantidade) {
-        this.temp.valorTotal = val * this.temp.quantidade
-      }
-    },
-
     '$route.params.id' (val) {
       if (!val) {
         this.model = {
@@ -1053,8 +1075,18 @@ export default {
         if (val.length > 0) {
           this.model.exportador = val[0].exportador
           this.model.moedaPedido = val[0].moeda
-          this.model.valorPedido = val.reduce((acc, atual) => acc + Number(atual.valorTotal || 0), 0)
+          this.model.valorPedido = val
+            .filter(f => f.valorUnitario && f.quantidade)
+            .map(f => Number(f.valorUnitario) * Number(f.quantidade))
+            .reduce((acc, atual) => acc + atual, 0)
         }
+      }
+    },
+
+    'model.status': {
+      deep: true,
+      handler (val) {
+        this.closeStatus(val[val.length - 1])
       }
     }
   },
