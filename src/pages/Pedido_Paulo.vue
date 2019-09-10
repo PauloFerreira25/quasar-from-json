@@ -1102,7 +1102,6 @@ export default {
       })
     }
   },
-  // TODO: concertar
   watch: {
     '$route.params.id' (val) {
       if (!val) {
