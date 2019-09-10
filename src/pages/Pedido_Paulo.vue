@@ -1055,7 +1055,9 @@ export default {
       if (typeof model.__index !== 'undefined') {
         let index = array.findIndex(f => f.__index === model.__index)
         if (index !== -1) {
-          this.$set(array, index, model)
+          // Array splice por causa da reatividade do Vue
+          // array[index] = model - não é reativo
+          array.splice(index, 1, model)
           this.temp = {}
           return
         }
