@@ -667,9 +667,11 @@
 
           <div class="row q-gutter-md q-mt-sm">
             <q-input
-              type="number"
               outlined
               class="col"
+              mask="#.##"
+              fill-mask="0"
+              reverse-fill-mask
               v-model="model.valorUnitario"
               :label="$t('pedido.itens.valorUnitario')"
             />
@@ -1066,6 +1068,15 @@ export default {
       array.push(model)
     },
 
+    /**
+     * Procura um objeto dentro de um array, coloca o valor em uma variavel e abre um modal
+     *
+     * @param {string} modal Referência ao modal que vai ser aberto
+     * @param {Array} array Lista que contem o elemento desejado
+     * @param {string} comparador Chave que contem o id do objeto da lista
+     * @param {object} search Objecto id
+     * @return {void}
+     */
     edit (modal, array, comparador, search) {
       if (!Array.isArray(array)) {
         return console.warn(`${array} não era um array!`)
@@ -1087,6 +1098,12 @@ export default {
       }
     },
 
+    /**
+     * Caso a hora não for preenchida coloca uma hora sysdate com mascara HH:mm:ss
+     *
+     * @param {object} val Objeto com data e status
+     * @return {void}
+     */
     closeStatus (val) {
       if (val && !val.dataStatus) {
         let date = new Date()
