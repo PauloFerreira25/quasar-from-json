@@ -1,5 +1,12 @@
 <template>
-  <q-input outlined v-model="model" :label="label">
+  <q-input
+    outlined
+    :label="label"
+    :rules="rules"
+    v-model="model"
+    :readonly="readonly"
+    :lazy-rules="lazyRules"
+  >
     <template
       #append
     >
@@ -51,6 +58,21 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    readonly: {
+      type: Boolean,
+      required: false,
+      default: () => false
+    },
+    rules: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    lazyRules: {
+      type: Boolean,
+      required: false,
+      default: () => false
     }
   },
   data () {

@@ -21,7 +21,10 @@ export default {
         }, {
           label: 'Level2 B',
           childrens: [{
-            label: 'Level3'
+            label: 'Level3',
+            childrens: [{
+              label: 'Level4'
+            }]
           }]
         }]
       }]
@@ -54,9 +57,7 @@ export default {
     }
 
     return this.createTransition(renderFunction, [
-      renderFunction('q-list', {
-        key: this.currentPath.length
-      }, childrens)
+      renderFunction('q-list', { key: this.currentPath.length }, childrens)
     ])
   },
 

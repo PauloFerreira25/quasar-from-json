@@ -22,21 +22,39 @@
         <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated vertical flat bordered>
           <q-step :name="1" :title="'Capa'" icon="list" :done="step > 1">
             <div class="row q-gutter-md q-mt-sm">
-              <basic-datetime
-                v-model="model.dataAberturaPO"
-                :label="$t('pedido.dataAberturaPO')"
+              <q-field
+                readonly
+                outlined
                 class="col"
-              />
+                stack-label
+                :rules="[]"
+                :label="$t('pedido.dataAberturaPO')"
+              >
+                <template #control>
+                  <div
+                    tabindex="0"
+                    class="self-center full-width no-outline"
+                  >
+                    {{ model.dataAberturaPO }}
+                  </div>
+                </template>
+              </q-field>
 
               <basic-datetime
+                ref="dataPedido"
                 v-model="model.dataPedido"
                 :label="$t('pedido.dataPedido')"
                 class="col"
+                lazy-rules
+                :rules="[
+                  val => new Date(val).getTime() > new Date(model.dataAberturaPO).getTime() || 'Data não deve ser inferior a abertura do PO'
+                ]"
               />
             </div>
 
             <div class="row q-gutter-md q-mt-sm">
               <q-select
+                ref="importador"
                 outlined
                 use-input
                 hide-selected
@@ -48,6 +66,10 @@
                 option-label="name"
                 option-value="_key"
                 class="col"
+                lazy-rules
+                :rules="[
+                  val => !!val || 'Campo obrigatório'
+                ]"
                 @filter="filterImportador"
               >
                 <template #no-option>
@@ -71,6 +93,7 @@
                 option-label="name"
                 option-value="_key"
                 class="col"
+                :rules="[]"
                 @filter="filterAdquirente"
               >
                 <template #no-option>
@@ -96,6 +119,7 @@
                 option-label="name"
                 option-value="_key"
                 class="col"
+                :rules="[]"
                 @filter="filterComprador"
               >
                 <template #no-option>
@@ -108,11 +132,16 @@
               </q-select>
 
               <q-select
+                ref="tipoPreco"
                 outlined
                 v-model="model.tipoPreco"
                 :options="pedidoStatusOpts"
                 :label="$t('pedido.tipoPreco')"
                 class="col"
+                lazy-rules
+                :rules="[
+                  val => !!val || 'Campo obrigatorio'
+                ]"
               />
             </div>
 
@@ -261,10 +290,11 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label caption lines="2">
-                    Broker
+                    <span :class="`text-${$refs.analistaBroker && $refs.analistaBroker.hasError ? 'negative' : 'grey'}`">Broker</span>
                     <q-icon name="edit" />
                     <q-popup-edit v-model="model.analistaBroker" buttons persistent>
                       <q-select
+                        ref="analistaBroker"
                         use-input
                         hide-selected
                         fill-input
@@ -276,6 +306,10 @@
                         option-value="_key"
                         class="col"
                         @filter="filterComprador"
+                        lazy-rules
+                        :rules="[
+                          val => !!val || 'Campo obrigatório'
+                        ]"
                       >
                         <template #no-option>
                           <q-item>
@@ -298,10 +332,11 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label caption lines="2">
-                    Cliente
+                    <span :class="`text-${$refs.analistaCliente && $refs.analistaCliente.hasError ? 'negative' : 'grey'}`">Cliente</span>
                     <q-icon name="edit" />
                     <q-popup-edit v-model="model.analistaCliente" buttons persistent>
                       <q-select
+                        ref="analistaCliente"
                         use-input
                         hide-selected
                         fill-input
@@ -313,6 +348,10 @@
                         option-value="_key"
                         class="col"
                         @filter="filterComprador"
+                        lazy-rules
+                        :rules="[
+                          val => !!val || 'Campo obrigatório'
+                        ]"
                       >
                         <template #no-option>
                           <q-item>
@@ -364,7 +403,7 @@
           <q-separator />
 
           <q-card-actions vertical>
-            <q-btn flat label="Validar" />
+            <q-btn flat label="Validar" @click="validar" />
             <q-btn color="primary" label="Processar" @click="processar" :loading="processando" />
             <q-btn color="secondary" label="Fechar" />
           </q-card-actions>
@@ -1051,6 +1090,14 @@ export default {
         let date = new Date()
         val.dataStatus = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       }
+    },
+
+    validar () {
+      Object.entries(this.$refs || {}).forEach(([key, val]) => {
+        if (typeof val.validate === 'function') {
+          val.validate()
+        }
+      })
     }
   },
   // TODO: concertar
@@ -1109,8 +1156,11 @@ export default {
           ? '0'.repeat(4 - String(ultimo).length) + ultimo
           : ultimo
 
+        let now = new Date()
+
         this.model.refPedido = `19PCX${ref}`
         this.model.pedidoStatus = 'Aberto'
+        this.model.dataAberturaPO = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
       })
     }
   }
