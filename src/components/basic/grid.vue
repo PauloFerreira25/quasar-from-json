@@ -1,5 +1,6 @@
 <template>
   <q-table
+  grid
     :title="title"
     :data="itens"
     :columns="cols"
